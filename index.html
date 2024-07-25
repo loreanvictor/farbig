@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Farbig: An Action Puzzle Game</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="manifest" href="manifest.json">
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    <meta name="viewport" content="width=device-width" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.18.0/matter.min.js"></script>
+    <style>
+      @import url('./style.css');
+    </style>
+  </head>
+  <body>
+    <div id="main">
+      <div id="score">
+        <div id="chosen" class="color circle"></div>
+        Score: <span id="score-val">0</span>
+      </div>
+      <div id="box-count"></div>
+      <div id="game-container">
+        <div id="game-area"></div>
+        <div id="menu">
+          <div>
+            Score: <span id="fscore">0</span> <br>
+            <br>
+            <small>Today's Record: <span id="tscore">0</span></small>
+            <br>
+            <small>All Time: <span id="record">0</span> <br></small>
+            <br>
+            <button id="reset" onclick="location.reload()">Restart</button>
+            <br>
+            <button id="help-btn">How to Play</button>
+            <br><br>
+            <small class="hint" id="version">Farbig v 0.1.1</small>
+            <small class="hint" id="seed">Seed ???</small>
+          </div>
+        </div>
+        <div id="help">
+          <div>
+            <div id="help-slides">
+              <div>
+                Place three or more boxes of the same color alongside each other to match and explode them.
+                <br><br>
+                Tap on a box to explode it alongside its matching neighbours.
+              </div>
+              <div>
+                The more boxes you match and explode at once, the higher the score you get.
+                <br><br>
+                Boxes of the special color (<span id="help-chosen" class="color circle"></span>) give twice the score.
+                The special color changes every hour.
+              </div>
+              <div>
+                The game is the same for everyone playing. The board changes every day,
+                the special color every hour.
+                <br><br>
+                How high can you score today?
+              </div>
+              <div>
+                Red boxes (<span class="color red"></span>) explode strongly. Exploding them rapidly in succession gives you bonus score. The longer the streak, the higher the score.
+              </div>
+              <div>
+                Green boxes (<span class="color green"></span>) have a higher combo bonus, increasing with the number of boxes matched.
+                <br><br>
+                After purple boxes (<span class="color purple"></span>) explode, the next color that matches will turn nearby purple boxes to its own color.
+              </div>
+              <div>
+                Orange boxes (<span class="color orange"></span>) might turn nearby boxes orange when they explode.
+                Use them to create huge combos.
+                <br><br>
+                White boxes (<span class="color white"></span>) change the color of nearby boxes when they explode.
+              </div>
+              <div>
+                Gray boxes (<span class="color gray"></span>) disable gravity when they explode. They also provide more score than other boxes.
+                <br><br>
+                Blue boxes (<span class="color blue"></span>) freeze nearby boxes when they explode. Use this to plan combos.
+              </div>
+            </div>
+            <br>
+            <small class="hint">◂ scroll for more ▸</small>
+          </div>
+        </div>
+      </div>
+      <div id="effects">
+        <div id="red"></div>
+        <div id="antigrav"></div>
+        <div id="purple"></div>
+      </div>
+      <button id="menu-btn">Menu</button>
+    </div>
+    <div id="dots"></div>
+    <script type="module">
+      import { random } from './random.js'
+      import { findMatches, findMatchesOf } from './match.js'
+      import { createMouse } from './mouse.js'
+      import { addScore } from './score.js'
+      import { explode } from './explode.js'
+      import { createBox, BOX_CONFIG } from './box.js'
+      import { ORANGE, RED, BLUE, GREEN, PURPLE, WHITE, GRAY } from './colors.js'
+      import { showMenu } from './menu.js'
+
+      const Engine = Matter.Engine,
+          Runner = Matter.Runner,
+          Render = Matter.Render,
+          World = Matter.World,
+          Bodies = Matter.Bodies,
+          Body = Matter.Body,
+          Events = Matter.Events,
+          Vector = Matter.Vector,
+          Composite = Matter.Composite,
+          Collision = Matter.Collision,
+          Query = Matter.Query;
+
+      // Gameplay configuration
+      const CONFIG = {
+          COLUMNS: 5,
+          ROWS: 128,
+          INITIAL_ROWS: 10,
+          BOX_SPACING: 0,
+          MAX_VEL: 0.06,      // Max velocity for a box to match
+          MIN_MATCH: 3,        // Minimum number of boxes for a match
+          MAX_DEVIATION: 20,   // Maximum deviation from line for matching
+      };
+
+      const colors = [
+        ORANGE, RED, BLUE, GREEN, PURPLE, WHITE, GRAY
+      ]
+
+      const engine = Engine.create()
+      const world = engine.world
+      const boxes = Composite.create()
+
+      const render = Render.create({
+          element: document.getElementById('game-area'),
+          engine: engine,
+          options: {
+              width: 380,
+              height: 580,
+              wireframes: false,
+              background: '#102f47'
+          }
+      });
+
+      function initializeBoxes() {
+          const totalBoxes = CONFIG.ROWS * CONFIG.COLUMNS;
+          const boxesPerColor = Math.floor(totalBoxes / colors.length / CONFIG.MIN_MATCH) * CONFIG.MIN_MATCH
+          let remainingBoxes = totalBoxes - (boxesPerColor * colors.length)
+          
+          // Create an array with the correct number of each color
+          let colorArray = colors.flatMap(color => Array(boxesPerColor).fill(color))
+          
+          // Add any remaining boxes (should be less than 4 * colors.length)
+          while (remainingBoxes > 0) {
+              colorArray.push(colors[random(0,  colors.length - 1)])
+              remainingBoxes--
+          }
+          
+          // Shuffle the color array
+          for (let i = colorArray.length - 1; i > 0; i--) {
+              const j = random(0, i + 1);
+              [colorArray[i], colorArray[j]] = [colorArray[j], colorArray[i]]
+          }
+          
+          let colorIndex = 0
+          
+          const createRow = (i) => {
+            const initial = i < CONFIG.INITIAL_ROWS
+            for (let j = 0; j < CONFIG.COLUMNS; j++) {
+              const x = 30 + j * (BOX_CONFIG.SIZE + CONFIG.BOX_SPACING)
+              const y = initial ? 570 - i * (BOX_CONFIG.SIZE + CONFIG.BOX_SPACING) :
+                - (BOX_CONFIG.SIZE + CONFIG.BOX_SPACING)
+              const color = colorArray[colorIndex]
+              const box = createBox(x, y, color)
+              Composite.add(boxes, box)
+              colorIndex++
+            }
+          }
+          
+          for (let i = 0; i < CONFIG.INITIAL_ROWS; i++) {
+            createRow(i)
+          }
+        
+          const minBoxes = CONFIG.INITIAL_ROWS * CONFIG.COLUMNS * 1.2
+          let rowToCreate = CONFIG.INITIAL_ROWS
+          let interval = setInterval(() => {
+            if (rowToCreate < CONFIG.ROWS) {
+              if (Composite.allBodies(boxes).length < minBoxes) {
+                createRow(rowToCreate)
+                rowToCreate++
+              }
+            } else {
+              clearInterval(interval)
+            }
+          }, 1000)
+        
+          World.add(world, boxes)
+      }
+
+      // Create walls
+      const wallOptions = { isStatic: true, render: { fillStyle: 'transparent' } };
+      const ground = Bodies.rectangle(-10_000, 690, 50_000, 200, wallOptions);
+      const leftWall = Bodies.rectangle(-100, -10_000, 230, 50_000, wallOptions);
+      const rightWall = Bodies.rectangle(490, -10_000, 240, 50_000, wallOptions);
+
+      World.add(world, [ground, leftWall, rightWall])
+
+      // Initialize boxes
+      initializeBoxes()
+
+      function checkMatches() {
+        const matches = findMatches(Composite.allBodies(boxes), CONFIG.MIN_MATCH, CONFIG.MAX_VEL)
+        matches.forEach(group => popGroup(group))
+      }
+
+      let allBoxes = CONFIG.ROWS * CONFIG.COLUMNS
+      function popGroup(group, tapped = false) {
+        const M = group.length - CONFIG.MIN_MATCH + 1
+        const combo = M > 0 ? M * M : 0.1
+        addScore(combo, group[0].tag)
+
+        group.forEach(box => {
+          World.remove(world, box)
+          Composite.remove(boxes, box)
+          explode(engine, box, group.length, tapped)
+        })
+        
+        if (group.length > 0) {
+          allBoxes -= group.length
+          updateBoxCountIndicator()
+          checkClean()
+        }
+      }
+
+      function updateBoxCountIndicator() {
+        document.getElementById('box-count').style.transform = `scaleY(${allBoxes / (CONFIG.ROWS * CONFIG.COLUMNS)})`
+      }
+
+      function checkClean() {
+        const map = {}
+        Composite.allBodies(boxes).forEach(box => {
+          map[box.tag] ??= 0
+          map[box.tag]++
+        })
+        
+        const max = Math.max(...Object.values(map))
+        
+        if (max < CONFIG.MIN_MATCH) {
+          showMenu()
+        }
+      }
+
+      setInterval(() => checkMatches(), 200)
+
+      World.add(world, createMouse(engine, render, group => popGroup(group, true)))
+
+      // Run the engine
+      // engine.gravity.scale = 0
+      Runner.run(engine)
+      Render.run(render)
+    </script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js').then((registration) => {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope)
+
+            navigator.serviceWorker.addEventListener('message', (event) => {
+              if (event.data.type === 'CURRENT_VERSION_RETRIEVED') {
+                document.getElementById('version').textContent = 'Farbig v ' + event.data.version
+              } else if (event.data.type === 'ASSETS_UPDATED') {
+                document.getElementById('version').innerHTML += '<br>new version available, restart to update.'
+              }
+            })
+
+            navigator.serviceWorker.controller.postMessage({ type: 'CHECK_FOR_UPDATES' })
+          }, (error) => {
+            console.log('ServiceWorker registration failed: ', error)
+          })
+        })
+      }
+    </script>
+  </body>
+</html>

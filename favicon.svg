@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>favicon</title>
+    <g id="favicon" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="Rectangle" fill="#325379" x="4" y="24" width="8" height="8"></rect>
+        <rect id="Rectangle-Copy" fill="#4974BE" x="4" y="16" width="8" height="8"></rect>
+        <rect id="Rectangle-Copy-2" fill="#912E83" x="4" y="8" width="8" height="8"></rect>
+        <rect id="Rectangle-Copy-3" fill="#BB2757" x="4" y="0" width="8" height="8"></rect>
+        <rect id="Rectangle-Copy-4" fill="#EFA73E" x="12" y="0" width="8" height="8"></rect>
+        <rect id="Rectangle-Copy-5" fill="#E3DBBD" x="20" y="0" width="8" height="8"></rect>
+        <rect id="Rectangle-Copy-6" fill="#52B469" x="12" y="16" width="8" height="8"></rect>
+    </g>
+</svg>
