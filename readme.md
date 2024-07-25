@@ -1,4 +1,4 @@
-![farbig art](./art.svg)
+<img src="art.svg" width="3000px"/>
 
 Farbig is a physics-based, free-form, and chaotic color matching game.
 - Place three or more boxes of the same color next to each other to match them.
