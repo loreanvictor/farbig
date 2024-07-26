@@ -91,26 +91,24 @@
     </div>
     <div id="dots"></div>
     <script type="module">
-      import { random } from './random.js'
-      import { findMatches, findMatchesOf } from './match.js'
-      import { createMouse } from './mouse.js'
-      import { addScore } from './score.js'
-      import { explode } from './explode.js'
-      import { createBox, BOX_CONFIG } from './box.js'
-      import { ORANGE, RED, BLUE, GREEN, PURPLE, WHITE, GRAY } from './colors.js'
-      import { showMenu } from './menu.js'
+      import { listen, dispatch } from './src/dispatch.js'
+      import { random } from './src/random.js'
+      import { addAttractionOnHold } from './src/attract.js'
+      import { addMatchOnTap, addAutoMatch } from './src/match.js'
+      import { createMouse } from './src/mouse.js'
+      import { addPopOnMatch } from './src/pop.js'
+      import { addScore, addScoreOnPop } from './src/score.js'
+      import { addExplodeOnPop } from './src/explode.js'
+      import { createBox, BOX_CONFIG } from './src/box.js'
+      import { ORANGE, RED, BLUE, GREEN, PURPLE, WHITE, GRAY } from './src/colors.js'
+      import { showMenu } from './src/menu.js'
 
       const Engine = Matter.Engine,
           Runner = Matter.Runner,
           Render = Matter.Render,
           World = Matter.World,
           Bodies = Matter.Bodies,
-          Body = Matter.Body,
-          Events = Matter.Events,
-          Vector = Matter.Vector,
-          Composite = Matter.Composite,
-          Collision = Matter.Collision,
-          Query = Matter.Query;
+          Composite = Matter.Composite;
 
       // Gameplay configuration
       const CONFIG = {
@@ -120,7 +118,6 @@
           BOX_SPACING: 0,
           MAX_VEL: 0.06,      // Max velocity for a box to match
           MIN_MATCH: 3,        // Minimum number of boxes for a match
-          MAX_DEVIATION: 20,   // Maximum deviation from line for matching
       };
 
       const colors = [
@@ -184,15 +181,16 @@
           const minBoxes = CONFIG.INITIAL_ROWS * CONFIG.COLUMNS * 1.2
           let rowToCreate = CONFIG.INITIAL_ROWS
           let interval = setInterval(() => {
+            const allBoxes = Composite.allBodies(boxes)
             if (rowToCreate < CONFIG.ROWS) {
-              if (Composite.allBodies(boxes).length < minBoxes) {
+              if (allBoxes.length < minBoxes) {
                 createRow(rowToCreate)
                 rowToCreate++
               }
             } else {
               clearInterval(interval)
             }
-          }, 1000)
+          }, 200)
         
           World.add(world, boxes)
       }
@@ -208,54 +206,29 @@
       // Initialize boxes
       initializeBoxes()
 
-      function checkMatches() {
-        const matches = findMatches(Composite.allBodies(boxes), CONFIG.MIN_MATCH, CONFIG.MAX_VEL)
-        matches.forEach(group => popGroup(group))
-      }
-
       let allBoxes = CONFIG.ROWS * CONFIG.COLUMNS
-      function popGroup(group, tapped = false) {
-        const M = group.length - CONFIG.MIN_MATCH + 1
-        const combo = M > 0 ? M * M : 0.1
-        addScore(combo, group[0].tag)
-
-        group.forEach(box => {
-          World.remove(world, box)
-          Composite.remove(boxes, box)
-          explode(engine, box, group.length, tapped)
-        })
-        
-        if (group.length > 0) {
-          allBoxes -= group.length
-          updateBoxCountIndicator()
-          checkClean()
-        }
-      }
 
       function updateBoxCountIndicator() {
         document.getElementById('box-count').style.transform = `scaleY(${allBoxes / (CONFIG.ROWS * CONFIG.COLUMNS)})`
       }
 
-      function checkClean() {
-        const map = {}
-        Composite.allBodies(boxes).forEach(box => {
-          map[box.tag] ??= 0
-          map[box.tag]++
-        })
-        
-        const max = Math.max(...Object.values(map))
-        
-        if (max < CONFIG.MIN_MATCH) {
-          showMenu()
-        }
-      }
+      listen('pop:group', ({ group }) => {
+        allBoxes -= group.length
+        updateBoxCountIndicator()
+      })
 
-      setInterval(() => checkMatches(), 200)
+      World.add(world, createMouse(engine, render))
 
-      World.add(world, createMouse(engine, render, group => popGroup(group, true)))
+      addAttractionOnHold(engine)
+      addMatchOnTap(engine)
+      addAutoMatch(engine, CONFIG.MIN_MATCH, CONFIG.MAX_VEL)
+      addPopOnMatch(engine, boxes, CONFIG.MIN_MATCH)
 
-      // Run the engine
-      // engine.gravity.scale = 0
+      listen('game-over', () => showMenu())
+
+      addScoreOnPop(CONFIG.MIN_MATCH)
+      addExplodeOnPop(engine)
+
       Runner.run(engine)
       Render.run(render)
     </script>

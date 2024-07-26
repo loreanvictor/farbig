@@ -1,15 +1,16 @@
+import { listen, dispatch } from './dispatch.js'
 import { BOX_CONFIG } from './box.js'
 import { GRAY } from './colors.js'
 
 
-export function findMatchesOf(boxes, startBox, maxvel = undefined) {
+export const findMatchesOf = (boxes, startBox, maxvel = undefined) => {
   const chain = new Set([startBox])
   addKinToChain(boxes, startBox, chain, maxvel)
   
   return Array.from(chain)
 }
 
-function addKinToChain(boxes, box, chain, maxvel = undefined) {
+const addKinToChain = (boxes, box, chain, maxvel = undefined) => {
   findKin(boxes, box, maxvel).forEach(kin => {
     if (!chain.has(kin)) {
       chain.add(kin)
@@ -18,7 +19,7 @@ function addKinToChain(boxes, box, chain, maxvel = undefined) {
   })
 }
 
-function findKin(boxes, box, maxvel = undefined) {
+const findKin = (boxes, box, maxvel = undefined) => {
     return boxes.filter(other => 
         other !== box &&
         other.tag === box.tag && (
@@ -33,7 +34,7 @@ function findKin(boxes, box, maxvel = undefined) {
 }
 
 
-export function findMatches(boxes, minmatch, maxvel = undefined) {
+export const findMatches = (boxes, minmatch, maxvel = undefined) => {
   const matches = []
 
   boxes.forEach(box => {    
@@ -52,4 +53,21 @@ export function findMatches(boxes, minmatch, maxvel = undefined) {
   })
 
   return matches
+}
+
+export const addMatchOnTap = (engine) => {
+  listen('tap:box', tapped => {
+    const boxes = Matter.Composite.allBodies(engine.world).filter(b => b.kind === 'box')
+    const group = findMatchesOf(boxes, tapped[0])
+
+    dispatch('match', { group, tapped: true })
+  })
+}
+
+export const addAutoMatch = (engine, minmatch, maxvel) => {
+  setInterval(() => {
+    const boxes = Matter.Composite.allBodies(engine.world).filter(b => b.kind === 'box')
+    const matches = findMatches(boxes, minmatch, maxvel)
+    matches.forEach(match => dispatch('match', { group: match, tapped: false }))
+  }, 200)
 }

@@ -1,3 +1,4 @@
+import { listen } from './dispatch.js'
 import { RED, GRAY, ORANGE, BLUE, PURPLE, WHITE, GREEN } from './colors.js'
 import { addScore, CHOSEN_COLOR } from './score.js'
 import { random } from './random.js'
@@ -149,4 +150,11 @@ export function explode(engine, box, multiplier = 1, tapped = false) {
       })
     }, 200)
   }
+}
+
+
+export const addExplodeOnPop = engine => {
+  listen('pop:box', ({ box, group, tapped }) => {
+    explode(engine, box, group.length, tapped)
+  })
 }

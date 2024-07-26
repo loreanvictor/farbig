@@ -1,5 +1,6 @@
+import { listen } from './dispatch.js'
 import { RED, GRAY, ORANGE, BLUE, PURPLE, WHITE, GREEN } from './colors.js'
-import { seed, random } from './random.js'
+import { seed } from './random.js'
 
 const dayRecordKey = `highScore-${seed}`
 const dayRecord = parseInt(localStorage.getItem(dayRecordKey) ?? 0)
@@ -9,7 +10,6 @@ let dayRecordToast = false
 let score = 0
 document.getElementById('tscore').textContent = `${dayRecord}`
 document.getElementById('record').textContent = `${personalBest}`
-
 
 function updateScore() {
   document.getElementById('score-val').textContent = `${score}`
@@ -66,7 +66,6 @@ function showCombo(msg) {
   comboMarker.addEventListener('transitionend', () => comboMarker.remove())
 }
 
-
 const SCOREMAP = {
   [RED]: 1,
   [BLUE]: 1,
@@ -78,7 +77,6 @@ const SCOREMAP = {
 }
 
 const BASESCORE = 10
-
 
 const _COLORS = Object.keys(SCOREMAP)
 export const CHOSEN_COLOR = _COLORS[
@@ -108,5 +106,10 @@ export function addScore(combo, color) {
   }
 }
 
-globalThis.showCombo = showCombo
-globalThis.addScore = addScore
+export const addScoreOnPop = (minmatch) => {
+  listen('pop:group', ({ group }) => {
+    const M = group.length - minmatch + 1
+    const combo = M > 0 ? M * M : 0.1
+    addScore(combo, group[0].tag)
+  })
+}

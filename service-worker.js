@@ -1,4 +1,4 @@
-const CACHE_NAME = 'farbig-cache-int-v0.1.2'
+const CACHE_NAME = 'farbig-cache-int-v0.1.5'
 const EXTERNAL_CACHE_NAME = 'farbig-cache-ext-v0.0.1'
 
 const ASSETS_TO_CACHE = [
@@ -8,19 +8,24 @@ const ASSETS_TO_CACHE = [
   '/icon-192x192.png',
   '/icon-512x512.png',
   '/favicon.svg',
-  '/box.js',
-  '/random.js',
-  '/match.js',
-  '/mouse.js',
-  '/score.js',
-  '/explode.js',
-  '/colors.js',
-  '/menu.js',
   '/version.json',
+
+  '/src/dispatch.js',
+  '/src/random.js',
+  '/src/mouse.js',
+  '/src/colors.js',
+  '/src/box.js',
+  '/src/match.js',
+  '/src/pop.js',
+  '/src/attract.js',
+  '/src/score.js',
+  '/src/explode.js',
+  '/src/menu.js',
 ]
 
 const EXTERNAL_ASSETS = [
   'https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.18.0/matter.min.js',
+  'https://unpkg.com/pure-rand/lib/esm/pure-rand.js',
 ]
 
 self.addEventListener('install', (event) => {
