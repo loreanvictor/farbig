@@ -102,6 +102,7 @@
       import { addPopOnMatch } from './src/pop.js'
       import { addScoreOnPop } from './src/score.js'
       import { addExplodeOnPop } from './src/explode.js'
+      import { addColorEffects } from './src/effects/index.js'
 
       import { showMenu } from './src/menu.js'
 
@@ -142,12 +143,14 @@
       })
 
       createMouse(engine, render)
+
       addAttractionOnHold(engine)
       addMatchOnTap(engine)
       addAutoMatch(engine, CONFIG.MIN_MATCH, CONFIG.MAX_VEL)
       addPopOnMatch(engine, boxes, CONFIG.MIN_MATCH)
       addScoreOnPop(CONFIG.MIN_MATCH)
       addExplodeOnPop(engine)
+      addColorEffects(engine)
 
       listen('game-over', () => showMenu())
 

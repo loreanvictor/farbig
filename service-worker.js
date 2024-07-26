@@ -1,4 +1,4 @@
-const CACHE_NAME = 'farbig-cache-int-v0.1.6'
+const CACHE_NAME = 'farbig-cache-int-v0.1.7'
 const EXTERNAL_CACHE_NAME = 'farbig-cache-ext-v0.0.1'
 
 const ASSETS_TO_CACHE = [
@@ -15,6 +15,14 @@ const ASSETS_TO_CACHE = [
   '/src/box/frost.js',
   '/src/box/index.js',
   '/src/box/stream.js',
+
+  '/src/effects/blue.js',
+  '/src/effects/gray.js',
+  '/src/effects/index.js',
+  '/src/effects/orange.js',
+  '/src/effects/purple.js',
+  '/src/effects/red.js',
+  '/src/effects/white.js',
 
   '/src/attract.js',
   '/src/dispatch.js',
