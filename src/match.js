@@ -1,6 +1,6 @@
 import { listen, dispatch } from './dispatch.js'
-import { BOX_CONFIG } from './box.js'
-import { GRAY } from './colors.js'
+import { BOX_CONFIG } from './box/box.js'
+import { GRAY } from './box/colors.js'
 
 
 export const findMatchesOf = (boxes, startBox, maxvel = undefined) => {

@@ -1,50 +1,6 @@
 import { BLUE } from './colors.js'
 
 
-export const BOX_CONFIG = {
-  SIZE: 72,
-  RADIUS: 8,
-  RESTITUTION: 0.5,
-  FRICTION: 10,
-}
-
-
-export function createBox(x, y, color) {
-  const box = Matter.Bodies.rectangle(
-      x, y, 
-      BOX_CONFIG.SIZE, BOX_CONFIG.SIZE, {
-        restitution: BOX_CONFIG.RESTITUTION,
-        friction: BOX_CONFIG.FRICTION,
-        kind: 'box',
-        tag: color,
-        render: {
-            fillStyle: color,
-            strokeStyle: color,
-            lineWidth: 0,
-        },
-        chamfer: {
-          radius:[
-            BOX_CONFIG.RADIUS,
-            BOX_CONFIG.RADIUS,
-            BOX_CONFIG.RADIUS,
-            BOX_CONFIG.RADIUS,
-          ]
-        }
-    }
-  )
-
-  return box
-}
-
-
-export function changeColor(box, color) {
-  box.tag = color
-  box.render.fillStyle = color
-  if (!(box.plugin.frost > 0)) {
-    box.render.strokeStyle = color
-  }
-}
-
 export function freeze(box, time) {
   if (!box.isStatic) {
     Matter.Body.setStatic(box, true)

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'farbig-cache-int-v0.1.5'
+const CACHE_NAME = 'farbig-cache-int-v0.1.6'
 const EXTERNAL_CACHE_NAME = 'farbig-cache-ext-v0.0.1'
 
 const ASSETS_TO_CACHE = [
@@ -10,17 +10,22 @@ const ASSETS_TO_CACHE = [
   '/favicon.svg',
   '/version.json',
 
-  '/src/dispatch.js',
-  '/src/random.js',
-  '/src/mouse.js',
-  '/src/colors.js',
-  '/src/box.js',
-  '/src/match.js',
-  '/src/pop.js',
+  '/src/box/box.js',
+  '/src/box/colors.js',
+  '/src/box/frost.js',
+  '/src/box/index.js',
+  '/src/box/stream.js',
+
   '/src/attract.js',
-  '/src/score.js',
+  '/src/dispatch.js',
   '/src/explode.js',
+  '/src/match.js',
   '/src/menu.js',
+  '/src/mouse.js',
+  '/src/pop.js',
+  '/src/random.js',
+  '/src/score.js',
+  '/src/walls.js',
 ]
 
 const EXTERNAL_ASSETS = [

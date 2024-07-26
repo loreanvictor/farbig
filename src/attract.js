@@ -12,7 +12,7 @@ export const addAttractionOnHold = (engine) => {
       const f = Matter.Vector.mult(
         Matter.Vector.normalise(
           Matter.Vector.sub(pos, box.position)
-        ), 0.015
+        ), 0.01
       )
 
       Matter.Body.applyForce(box, pos, f)

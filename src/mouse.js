@@ -1,4 +1,4 @@
-import { dispatch, listen } from './dispatch.js'
+import { dispatch } from './dispatch.js'
 
 
 const addBoxTapListener = (mouse, engine) => {
@@ -47,5 +47,5 @@ export const createMouse = (engine, render) => {
   addBoxTapListener(mouse, engine)
   addHoldListener(mouse)
 
-  return mouse
+  Matter.World.add(engine.world, mouse)
 }

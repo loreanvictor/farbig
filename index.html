@@ -91,146 +91,68 @@
     </div>
     <div id="dots"></div>
     <script type="module">
-      import { listen, dispatch } from './src/dispatch.js'
-      import { random } from './src/random.js'
+      import { listen } from './src/dispatch.js'
+
+      import { createBoxStream }  from './src/box/index.js'
+      import { createWalls } from './src/walls.js'
+      import { createMouse } from './src/mouse.js'
+
       import { addAttractionOnHold } from './src/attract.js'
       import { addMatchOnTap, addAutoMatch } from './src/match.js'
-      import { createMouse } from './src/mouse.js'
       import { addPopOnMatch } from './src/pop.js'
-      import { addScore, addScoreOnPop } from './src/score.js'
+      import { addScoreOnPop } from './src/score.js'
       import { addExplodeOnPop } from './src/explode.js'
-      import { createBox, BOX_CONFIG } from './src/box.js'
-      import { ORANGE, RED, BLUE, GREEN, PURPLE, WHITE, GRAY } from './src/colors.js'
+
       import { showMenu } from './src/menu.js'
 
-      const Engine = Matter.Engine,
-          Runner = Matter.Runner,
-          Render = Matter.Render,
-          World = Matter.World,
-          Bodies = Matter.Bodies,
-          Composite = Matter.Composite;
-
-      // Gameplay configuration
       const CONFIG = {
+          GAME_WIDTH: 380,
+          GAME_HEIGHT: 580,
           COLUMNS: 5,
           ROWS: 128,
           INITIAL_ROWS: 10,
           BOX_SPACING: 0,
           MAX_VEL: 0.06,      // Max velocity for a box to match
           MIN_MATCH: 3,        // Minimum number of boxes for a match
-      };
+      }
 
-      const colors = [
-        ORANGE, RED, BLUE, GREEN, PURPLE, WHITE, GRAY
-      ]
-
-      const engine = Engine.create()
-      const world = engine.world
-      const boxes = Composite.create()
-
-      const render = Render.create({
+      const engine = Matter.Engine.create()
+      const render = Matter.Render.create({
           element: document.getElementById('game-area'),
           engine: engine,
           options: {
-              width: 380,
-              height: 580,
+              width: CONFIG.GAME_WIDTH,
+              height: CONFIG.GAME_HEIGHT,
               wireframes: false,
               background: '#102f47'
           }
-      });
-
-      function initializeBoxes() {
-          const totalBoxes = CONFIG.ROWS * CONFIG.COLUMNS;
-          const boxesPerColor = Math.floor(totalBoxes / colors.length / CONFIG.MIN_MATCH) * CONFIG.MIN_MATCH
-          let remainingBoxes = totalBoxes - (boxesPerColor * colors.length)
-          
-          // Create an array with the correct number of each color
-          let colorArray = colors.flatMap(color => Array(boxesPerColor).fill(color))
-          
-          // Add any remaining boxes (should be less than 4 * colors.length)
-          while (remainingBoxes > 0) {
-              colorArray.push(colors[random(0,  colors.length - 1)])
-              remainingBoxes--
-          }
-          
-          // Shuffle the color array
-          for (let i = colorArray.length - 1; i > 0; i--) {
-              const j = random(0, i + 1);
-              [colorArray[i], colorArray[j]] = [colorArray[j], colorArray[i]]
-          }
-          
-          let colorIndex = 0
-          
-          const createRow = (i) => {
-            const initial = i < CONFIG.INITIAL_ROWS
-            for (let j = 0; j < CONFIG.COLUMNS; j++) {
-              const x = 30 + j * (BOX_CONFIG.SIZE + CONFIG.BOX_SPACING)
-              const y = initial ? 570 - i * (BOX_CONFIG.SIZE + CONFIG.BOX_SPACING) :
-                - (BOX_CONFIG.SIZE + CONFIG.BOX_SPACING)
-              const color = colorArray[colorIndex]
-              const box = createBox(x, y, color)
-              Composite.add(boxes, box)
-              colorIndex++
-            }
-          }
-          
-          for (let i = 0; i < CONFIG.INITIAL_ROWS; i++) {
-            createRow(i)
-          }
-        
-          const minBoxes = CONFIG.INITIAL_ROWS * CONFIG.COLUMNS * 1.2
-          let rowToCreate = CONFIG.INITIAL_ROWS
-          let interval = setInterval(() => {
-            const allBoxes = Composite.allBodies(boxes)
-            if (rowToCreate < CONFIG.ROWS) {
-              if (allBoxes.length < minBoxes) {
-                createRow(rowToCreate)
-                rowToCreate++
-              }
-            } else {
-              clearInterval(interval)
-            }
-          }, 200)
-        
-          World.add(world, boxes)
-      }
-
-      // Create walls
-      const wallOptions = { isStatic: true, render: { fillStyle: 'transparent' } };
-      const ground = Bodies.rectangle(-10_000, 690, 50_000, 200, wallOptions);
-      const leftWall = Bodies.rectangle(-100, -10_000, 230, 50_000, wallOptions);
-      const rightWall = Bodies.rectangle(490, -10_000, 240, 50_000, wallOptions);
-
-      World.add(world, [ground, leftWall, rightWall])
-
-      // Initialize boxes
-      initializeBoxes()
-
-      let allBoxes = CONFIG.ROWS * CONFIG.COLUMNS
-
-      function updateBoxCountIndicator() {
-        document.getElementById('box-count').style.transform = `scaleY(${allBoxes / (CONFIG.ROWS * CONFIG.COLUMNS)})`
-      }
-
-      listen('pop:group', ({ group }) => {
-        allBoxes -= group.length
-        updateBoxCountIndicator()
       })
 
-      World.add(world, createMouse(engine, render))
+      createWalls(engine, {
+        width: CONFIG.GAME_WIDTH,
+        height: CONFIG.GAME_HEIGHT,
+      })
 
+      const boxes = createBoxStream(engine, {
+        rows: CONFIG.ROWS,
+        columns: CONFIG.COLUMNS,
+        minmatch: CONFIG.MIN_MATCH,
+        initialRows: CONFIG.INITIAL_ROWS,
+        spacing: CONFIG.BOX_SPACING,
+      })
+
+      createMouse(engine, render)
       addAttractionOnHold(engine)
       addMatchOnTap(engine)
       addAutoMatch(engine, CONFIG.MIN_MATCH, CONFIG.MAX_VEL)
       addPopOnMatch(engine, boxes, CONFIG.MIN_MATCH)
-
-      listen('game-over', () => showMenu())
-
       addScoreOnPop(CONFIG.MIN_MATCH)
       addExplodeOnPop(engine)
 
-      Runner.run(engine)
-      Render.run(render)
+      listen('game-over', () => showMenu())
+
+      Matter.Runner.run(engine)
+      Matter.Render.run(render)
     </script>
     <script>
       if ('serviceWorker' in navigator) {

@@ -1,5 +1,5 @@
 import { listen } from './dispatch.js'
-import { RED, GRAY, ORANGE, BLUE, PURPLE, WHITE, GREEN } from './colors.js'
+import { RED, GRAY, ORANGE, BLUE, PURPLE, WHITE, GREEN } from './box/colors.js'
 import { seed } from './random.js'
 
 const dayRecordKey = `highScore-${seed}`

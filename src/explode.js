@@ -1,9 +1,13 @@
 import { listen } from './dispatch.js'
-import { RED, GRAY, ORANGE, BLUE, PURPLE, WHITE, GREEN } from './colors.js'
+import {
+  BOX_CONFIG,
+  RED, GRAY, ORANGE, BLUE, PURPLE, WHITE, GREEN,
+  changeColor, freeze, unfreeze
+} from './box/index.js'
 import { addScore, CHOSEN_COLOR } from './score.js'
 import { random } from './random.js'
-import { BOX_CONFIG, changeColor, freeze, unfreeze } from './box.js'
 
+// TODO: make effects event-driven as well
 
 let antiGravCounter = 0
 let gravRunner
