@@ -37,12 +37,12 @@ const findKin = (boxes, box, maxvel = undefined) => {
 export const findMatches = (boxes, minmatch, maxvel = undefined) => {
   const matches = []
 
-  boxes.forEach(box => {    
+  boxes.forEach(box => {
     if (
       (!boxes.some(b => b.tag === box.tag && b.isStatic))
       && (
         (maxvel === undefined) ||
-        (Matter.Vector.magnitude(box.velocity) < maxvel && box.tag !== GRAY)
+        (Matter.Vector.magnitude(box.velocity) < maxvel && box.plugin.touched === true)
       ) && !matches.some(match => match.includes(box))
     ) {
       const match = findMatchesOf(boxes, box, maxvel)

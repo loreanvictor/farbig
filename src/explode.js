@@ -5,7 +5,7 @@ import { CHOSEN_COLOR } from './score.js'
 
 export function explode(engine, box, tapped = false) {
   const gmult = CHOSEN_COLOR === GRAY ? 2 : 1
-  const force = box.tag === RED ? 50 : box.tag === GRAY ? -30 * gmult : 20
+  const force = box.tag === RED ? 50 : box.tag === GRAY ? -20 * gmult : 20
 
   const boxes = Matter.Composite.allBodies(engine.world).filter(b => b.kind === 'box')
   boxes.forEach(b => {

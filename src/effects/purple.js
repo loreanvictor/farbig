@@ -1,4 +1,5 @@
 import { listen } from '../dispatch.js'
+import { CHOSEN_COLOR } from '../score.js'
 import { PURPLE, BOX_CONFIG, changeColor } from '../box/index.js'
 
 
@@ -9,7 +10,8 @@ export const addPurpleEffect = (engine) => {
   const purpleInd = document.getElementById('purple')
 
   const powerPurple = (mul) => {
-    purplePower = Math.min(MAX_PURPLE, purplePower + mul)
+    const mult = CHOSEN_COLOR === PURPLE ? 2 : 1
+    purplePower = Math.min(MAX_PURPLE, purplePower + mul * mult)
     purpleInd.style.transform = `scaleX(${Math.sqrt(purplePower / MAX_PURPLE)})`
   }
 

@@ -1,6 +1,15 @@
 import { dispatch } from './dispatch.js'
 
 
+const addBoxTouchListener = (mouse, engine) => {
+  Matter.Events.on(mouse, 'startdrag', event => {
+    if (event.body.kind === 'box') {
+      event.body.plugin.touched = true
+      dispatch('touch:box', event.body)
+    }
+  })
+}
+
 const addBoxTapListener = (mouse, engine) => {
   let cltimer
   let downpos
@@ -45,6 +54,7 @@ export const createMouse = (engine, render) => {
   })
   
   addBoxTapListener(mouse, engine)
+  addBoxTouchListener(mouse, engine)
   addHoldListener(mouse)
 
   Matter.World.add(engine.world, mouse)

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'farbig-cache-int-v0.1.7'
+const CACHE_NAME = 'farbig-cache-int-v0.2.0'
 const EXTERNAL_CACHE_NAME = 'farbig-cache-ext-v0.0.1'
 
 const ASSETS_TO_CACHE = [

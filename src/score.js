@@ -2,6 +2,7 @@ import { listen } from './dispatch.js'
 import { RED, GRAY, ORANGE, BLUE, PURPLE, WHITE, GREEN } from './box/colors.js'
 import { seed } from './random.js'
 
+
 const dayRecordKey = `highScore-${seed}`
 const dayRecord = parseInt(localStorage.getItem(dayRecordKey) ?? 0)
 const personalBest = parseInt(localStorage.getItem('highScore') ?? 0)
@@ -73,7 +74,7 @@ const SCOREMAP = {
   [PURPLE]: 1,
   [WHITE]: 1,
   [GREEN]: 1,
-  [GRAY]: 1,
+  [GRAY]: 2,
 }
 
 const BASESCORE = 10

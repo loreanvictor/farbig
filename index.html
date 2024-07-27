@@ -41,12 +41,12 @@
           <div>
             <div id="help-slides">
               <div>
-                Place three or more boxes of the same color alongside each other to match and explode them.
+                Place three or more boxes of the same color next to each other to match them.
                 <br><br>
-                Tap on a box to explode it alongside its matching neighbours.
+                Tap on any box to explode it, and its matching neighbours, instantly.
               </div>
               <div>
-                The more boxes you match and explode at once, the higher the score you get.
+                The more boxes you match and match at once, the higher the score you get.
                 <br><br>
                 Boxes of the special color (<span id="help-chosen" class="color circle"></span>) give twice the score.
                 The special color changes every hour.
@@ -72,7 +72,7 @@
                 White boxes (<span class="color white"></span>) change the color of nearby boxes when they explode.
               </div>
               <div>
-                Gray boxes (<span class="color gray"></span>) dont match unless you tap them, and disable gravity when they explode.
+                Gray boxes (<span class="color gray"></span>) give more score, and disable gravity when they explode.
                 <br><br>
                 Blue boxes (<span class="color blue"></span>) freeze nearby boxes when they explode. Use this to plan combos.
               </div>
@@ -113,7 +113,7 @@
           ROWS: 128,
           INITIAL_ROWS: 10,
           BOX_SPACING: 0,
-          MAX_VEL: 0.06,      // Max velocity for a box to match
+          MAX_VEL: 0.1,      // Max velocity for a box to match
           MIN_MATCH: 3,        // Minimum number of boxes for a match
       }
 
