@@ -8,7 +8,7 @@ export const addOrangeEffect = (engine) => {
   listen('pop:group', ({ group }) => {
     if (group[0].tag === ORANGE) {
       const boxes = Matter.Composite.allBodies(engine.world).filter(b => b.kind === 'box')
-      const mult = CHOSEN_COLOR === ORANGE ? 1.2 : 1
+      const mult = CHOSEN_COLOR === ORANGE ? 1.4 : 1
 
       let converted = 0
       boxes.forEach(box => {
@@ -18,7 +18,7 @@ export const addOrangeEffect = (engine) => {
             Matter.Vector.magnitude(Matter.Vector.sub(b.position, box.position))
           ), Infinity
         )
-        const chance = Math.max(Math.min(group.length * group.length * group.length / 4, 75), 15)
+        const chance = Math.max(Math.min(group.length * group.length / 2, 70), 10)
         const maxdist = BOX_CONFIG.SIZE * 1.5 * mult 
 
         if (distance < maxdist) {
