@@ -1,8 +1,8 @@
 export const BOX_CONFIG = {
   SIZE: 72,
   RADIUS: 8,
-  RESTITUTION: 0.5,
-  FRICTION: 10,
+  RESTITUTION: 0.7,
+  FRICTION: 0,
 }
 
 export function createBox(x, y, color) {
