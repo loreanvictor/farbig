@@ -9,7 +9,7 @@ export const addWhiteEffect = (engine) => {
     if (box.tag === WHITE) {
       const boxes = Matter.Composite.allBodies(engine.world).filter(b => b.kind === 'box')
       const colors = [RED, BLUE, GREEN, PURPLE, GRAY, ORANGE]
-      const mult = CHOSEN_COLOR === WHITE ? 1.5 : 1
+      const mult = CHOSEN_COLOR === WHITE ? 2 : 1
 
       boxes.forEach(b => {
         const distance = Matter.Vector.magnitude(Matter.Vector.sub(b.position, box.position))
