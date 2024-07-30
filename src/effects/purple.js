@@ -10,7 +10,7 @@ export const addPurpleEffect = (engine) => {
   const purpleInd = document.getElementById('purple')
 
   const powerPurple = (mul) => {
-    const mult = CHOSEN_COLOR === PURPLE ? 2 : 1
+    const mult = CHOSEN_COLOR === PURPLE ? 4 : 1
     purplePower = Math.min(MAX_PURPLE, purplePower + mul * mult)
     purpleInd.style.transform = `scaleX(${Math.sqrt(purplePower / MAX_PURPLE)})`
   }
