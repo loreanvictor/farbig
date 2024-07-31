@@ -3,7 +3,7 @@ import { listen } from '../dispatch.js'
 import { RED } from '../box/index.js'
 
 
-export const addRedEffect = (engine) => {
+export const addRedEffect = () => {
   let redTimer
   let redCombo = 0
 
@@ -12,7 +12,7 @@ export const addRedEffect = (engine) => {
 
   const activateRed = (mul) => {
     clearTimeout(redTimer)
-    redCombo = Math.min(redCombo + mul, MAX_RED)
+    redCombo = Math.min(redCombo + Math.max(mul * mul / 2, 1), MAX_RED)
     const redInd = document.getElementById('red')
     redInd.style.transition = 'none'
     redInd.style.transform = 'scaleX(1)'
@@ -21,7 +21,7 @@ export const addRedEffect = (engine) => {
       redInd.style.transform = 'scaleX(0)'
     }, 50)
 
-    setTimeout(() => addScore(Math.max(2, redCombo), RED), 100)
+    addScore(Math.max(2, redCombo), RED)
     redTimer = setTimeout(() => redCombo = 0, RED_DURATION)
   }
 
