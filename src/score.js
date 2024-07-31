@@ -74,7 +74,7 @@ const SCOREMAP = {
   [PURPLE]: 1,
   [WHITE]: 1,
   [GREEN]: 1,
-  [GRAY]: 2,
+  [GRAY]: 3,
 }
 
 const BASESCORE = 10

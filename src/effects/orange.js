@@ -18,7 +18,7 @@ export const addOrangeEffect = (engine) => {
             Matter.Vector.magnitude(Matter.Vector.sub(b.position, box.position))
           ), Infinity
         )
-        const chance = Math.max(Math.min(group.length * 6, 75), 10)
+        const chance = Math.max(Math.min(group.length * group.length / 3, 80), 10)
         const maxdist = BOX_CONFIG.SIZE * 1.5 * mult 
 
         if (distance < maxdist) {
