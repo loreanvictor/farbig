@@ -12,7 +12,7 @@ export const addRedEffect = () => {
 
   const activateRed = (mul) => {
     clearTimeout(redTimer)
-    redCombo = Math.min(redCombo + Math.max(mul * mul / 2, 1), MAX_RED)
+    redCombo = Math.min(redCombo + Math.floor(Math.max(mul * mul / 2, 1)), MAX_RED)
     const redInd = document.getElementById('red')
     redInd.style.transition = 'none'
     redInd.style.transform = 'scaleX(1)'
