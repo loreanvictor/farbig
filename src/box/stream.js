@@ -70,7 +70,7 @@ const attachStreamIndicator = (total) => {
   let allBoxes = total
 
   function updateBoxCountIndicator() {
-    document.getElementById('box-count').style.transform = `scaleY(${allBoxes / total})`
+    document.getElementById('box-count-indicator').style.transform = `scaleY(${allBoxes / total})`
   }
 
   listen('pop:group', ({ group }) => {

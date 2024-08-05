@@ -80,15 +80,34 @@ button {
 }
 
 #box-count {
-  background-color: var(--btn-bg);
+  --width: calc(3 * var(--effects-bar-thickness));
+
   position: absolute;
   top: 0;
   height: var(--game-height);
-  width: var(--effects-bar-thickness);
-  right: calc(-2 * var(--effects-bar-thickness));
-  border-radius: var(--effects-bar-thickness);
-  transform-origin: bottom;
-  transition: transform .15s;
+  width: var(--width);
+  right: calc(-1 * var(--width));
+
+  .box-count-marker {
+    position: relative;
+    width: var(--width);
+    height: calc(2 * var(--effects-bar-thickness));
+    background-color: var(--body-bg);
+    border-radius: var(--effects-bar-thickness);
+    margin-top: calc(.2 * var(--game-height) - var(--effects-bar-thickness));
+  }
+
+  #box-count-indicator {
+    position: absolute;
+    top: 0;
+    margin-left: calc((var(--width) - var(--effects-bar-thickness)) / 2);
+    height: var(--game-height);
+    background-color: var(--btn-bg);
+    width: var(--effects-bar-thickness);
+    border-radius: var(--effects-bar-thickness);
+    transform-origin: bottom;
+    transition: transform .15s;
+  }
 }
 
 #score {
