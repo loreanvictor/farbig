@@ -31,7 +31,7 @@ export const addOrangeEffect = (engine) => {
       })
 
       if (converted > 0) {
-        addScore(converted * converted, ORANGE)
+        addScore(Math.floor(converted * converted * converted / 10), ORANGE)
       }
     }
   })
