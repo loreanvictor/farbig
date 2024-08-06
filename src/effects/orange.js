@@ -9,30 +9,29 @@ export const addOrangeEffect = (engine) => {
     if (group[0].tag === ORANGE) {
       const boxes = Matter.Composite.allBodies(engine.world).filter(b => b.kind === 'box')
       const mult = CHOSEN_COLOR === ORANGE ? 1.4 : 1
+      const maxdist = BOX_CONFIG.SIZE * 1.5 * mult
 
-      let converted = 0
-      boxes.forEach(box => {
-        const distance = group.reduce(
+      const touched = boxes.filter(box => {
+        return group.reduce(
           (min, b) => Math.min(
             min,
             Matter.Vector.magnitude(Matter.Vector.sub(b.position, box.position))
           ), Infinity
-        )
-        const chance = Math.max(Math.min(group.length * group.length / 1.25, 95), 5)
-        const maxdist = BOX_CONFIG.SIZE * 1.5 * mult 
+        ) < maxdist
+      })
 
-        if (distance < maxdist) {
-          unfreeze(box)
-          if (random(0, 100) < chance) {
-            changeColor(box, ORANGE)
-            converted++
-          }
+      let converted = 0
+      const chance = Math.max(Math.min(touched.length * touched.length / 3, 95), 5)
+
+      touched.forEach(box => {
+        unfreeze(box)
+        if (random(0, 100) < chance) {
+          changeColor(box, ORANGE)
+          converted++
         }
       })
 
-      if (converted > 0) {
-        addScore(converted * converted, ORANGE)
-      }
+      addScore(converted * converted, ORANGE)
     }
   })
 }
