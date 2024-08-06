@@ -8,8 +8,7 @@ export const addOrangeEffect = (engine) => {
   listen('pop:group', ({ group }) => {
     if (group[0].tag === ORANGE) {
       const boxes = Matter.Composite.allBodies(engine.world).filter(b => b.kind === 'box')
-      const mult = CHOSEN_COLOR === ORANGE ? 1.4 : 1
-      const maxdist = BOX_CONFIG.SIZE * 1.5 * mult
+      const maxdist = BOX_CONFIG.SIZE * 1.5
 
       const touched = boxes.filter(box => {
         return group.reduce(
