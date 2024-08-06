@@ -11,7 +11,7 @@ export const COLORS = [ORANGE, RED, BLUE, GREEN, PURPLE, WHITE, GRAY]
 export const changeColor = (box, color) => {
   box.tag = color
   box.render.fillStyle = color
-  box.plugin.touched = true
+  box.plugin.touched = false
   if (!(box.plugin.frost > 0)) {
     box.render.strokeStyle = color
   }
