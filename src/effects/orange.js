@@ -11,7 +11,7 @@ export const addOrangeEffect = (engine) => {
       const maxdist = BOX_CONFIG.SIZE * 1.5
 
       const touched = boxes.filter(box => {
-        return group.reduce(
+        return box.tag !== ORANGE && group.reduce(
           (min, b) => Math.min(
             min,
             Matter.Vector.magnitude(Matter.Vector.sub(b.position, box.position))
@@ -30,7 +30,7 @@ export const addOrangeEffect = (engine) => {
         }
       })
 
-      addScore(converted * converted * 4, ORANGE)
+      addScore(converted * converted * 5, ORANGE)
     }
   })
 }

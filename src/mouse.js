@@ -34,12 +34,21 @@ const addBoxTapListener = (mouse, engine) => {
 
 const addHoldListener = (mouse) => {
   let holdpos = undefined
+  let holding = false
 
-  Matter.Events.on(mouse, 'mousedown', (event) => { holdpos = event.mouse.position })
+  Matter.Events.on(mouse, 'mousedown', (event) => { 
+    holding = true
+    holdpos = event.mouse.position
+  })
   Matter.Events.on(mouse, 'mousemove', (event) => { holdpos = event.mouse.position })
-  Matter.Events.on(mouse, 'mouseup', () => { holdpos = undefined })
+  Matter.Events.on(mouse, 'mouseup', () => {
+    holding = false
+    holdpos = undefined
+  })
 
-  setInterval(() => { holdpos && dispatch('hold', holdpos)}, 1000 / 60)
+  setInterval(() => {
+    holding && dispatch('hold', holdpos)
+  }, 1000 / 60)
 }
 
 export const createMouse = (engine, render) => {

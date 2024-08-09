@@ -1,4 +1,5 @@
 import { listen } from './dispatch.js'
+import { BOX_CONFIG } from './box/index.js'
 
 
 export const addAttractionOnHold = (engine) => {
