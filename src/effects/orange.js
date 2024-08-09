@@ -30,7 +30,7 @@ export const addOrangeEffect = (engine) => {
         }
       })
 
-      addScore(converted * converted * 5, ORANGE)
+      addScore(converted * converted * 4, ORANGE)
     }
   })
 }
