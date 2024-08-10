@@ -4,7 +4,9 @@ import { dispatch } from './dispatch.js'
 const addBoxTouchListener = (mouse, engine) => {
   Matter.Events.on(mouse, 'startdrag', event => {
     if (event.body.kind === 'box') {
-      event.body.plugin.touched = true
+      if (engine.gravity.scale > 0) {
+        event.body.plugin.touched = true
+      }
       dispatch('touch:box', event.body)
     }
   })

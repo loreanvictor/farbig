@@ -103,7 +103,6 @@
       import { createWalls } from './src/walls.js'
       import { createMouse } from './src/mouse.js'
 
-      import { addAttractionOnHold } from './src/attract.js'
       import { addMatchOnTap, addAutoMatch } from './src/match.js'
       import { addPopOnMatch } from './src/pop.js'
       import { addScoreOnPop } from './src/score.js'
@@ -150,7 +149,6 @@
 
       createMouse(engine, render)
 
-      addAttractionOnHold(engine)
       addMatchOnTap(engine)
       addAutoMatch(engine, CONFIG.MIN_MATCH, CONFIG.MAX_VEL)
       addPopOnMatch(engine, boxes, CONFIG.MIN_MATCH)
