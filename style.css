@@ -214,6 +214,10 @@ button {
 
     &#antigrav {
       background: var(--gray);
+      box-sizing: border-box;
+      border: 18px solid transparent;
+      border-top: none;
+      border-bottom: none;
     }
 
     &#red {
