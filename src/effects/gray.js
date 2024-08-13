@@ -35,7 +35,11 @@ export const addGrayEffect = (engine) => {
   listen('pop:box', ({ box, group }) => {
     if (box.tag === GRAY) {
       turnGravityOff(group.length)
-    } else if (engine.gravity.scale === 0) {
+    }
+  })
+
+  listen('touch:box', box => {
+    if (engine.gravity.scale === 0) {
       attractColor = box.tag
       indicator.style.borderColor = attractColor
     }
