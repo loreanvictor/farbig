@@ -33,7 +33,7 @@ export const createBoxStream = (engine, config) => {
     for (let j = 0; j < config.columns; j++) {
       const x = 30 + j * (BOX_CONFIG.SIZE + config.spacing)
       const y = initial ? 570 - i * (BOX_CONFIG.SIZE + config.spacing) :
-        - (BOX_CONFIG.SIZE + config.spacing)
+        - 2 * (BOX_CONFIG.SIZE + config.spacing)
       const color = colorArray[colorIndex]
       const box = createBox(x, y, color)
       Matter.Composite.add(boxes, box)
@@ -45,7 +45,7 @@ export const createBoxStream = (engine, config) => {
     createRow(i)
   }
 
-  const minBoxes = config.initialRows * config.columns * 1.2
+  const minBoxes = config.initialRows * config.columns * 1.6
   let rowToCreate = config.initialRows
   let interval = setInterval(() => {
     const allBoxes = Matter.Composite.allBodies(boxes)
@@ -57,7 +57,7 @@ export const createBoxStream = (engine, config) => {
     } else {
       clearInterval(interval)
     }
-  }, 200)
+  }, 500)
 
   Matter.World.add(engine.world, boxes)
   attachStreamIndicator(config.rows * config.columns)
