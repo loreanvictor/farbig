@@ -26,6 +26,7 @@ html, body {
 }
 
 body {
+  touch-action: none;
   position: relative;
   display: flex;
   justify-content: center;
