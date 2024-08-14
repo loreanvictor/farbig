@@ -45,7 +45,7 @@ export const createBoxStream = (engine, config) => {
     createRow(i)
   }
 
-  const minBoxes = config.initialRows * config.columns * 1.6
+  const minBoxes = config.pageRows * config.columns * 1.6
   let rowToCreate = config.initialRows
   let interval = setInterval(() => {
     const allBoxes = Matter.Composite.allBodies(boxes)
@@ -57,7 +57,7 @@ export const createBoxStream = (engine, config) => {
     } else {
       clearInterval(interval)
     }
-  }, 500)
+  }, 200)
 
   Matter.World.add(engine.world, boxes)
   attachStreamIndicator(config.rows * config.columns)
