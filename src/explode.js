@@ -1,13 +1,20 @@
 import { listen } from './dispatch.js'
-import { RED, GRAY, BLUE } from './box/index.js'
+import { RED, GRAY, BLUE, GREEN, WHITE, PURPLE, ORANGE } from './box/index.js'
 import { CHOSEN_COLOR } from './score.js'
 
 
-export function explode(engine, box, tapped = false) {
-  const gmult = CHOSEN_COLOR === GRAY ? 3 : 1
-  const force = box.tag === RED ? 50 : 
-    box.tag === GRAY ? -20 * gmult :
-    box.tag === BLUE ? 0 : 20
+const EXPLOSION_FORCE = {
+  [RED]: 50,
+  [GRAY]: -20 * CHOSEN_COLOR === GRAY ? 3 : 1,
+  [ORANGE]: 5,
+  [BLUE]: 0,
+  [PURPLE]: 20,
+  [WHITE]: 20,
+  [GREEN]: 20
+}
+
+export function explode(engine, box) {
+  const force = EXPLOSION_FORCE[box.tag]
 
   const boxes = Matter.Composite.allBodies(engine.world).filter(b => b.kind === 'box')
   boxes.forEach(b => {
