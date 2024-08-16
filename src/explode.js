@@ -1,11 +1,10 @@
 import { listen } from './dispatch.js'
 import { RED, GRAY, BLUE, GREEN, WHITE, PURPLE, ORANGE } from './box/index.js'
-import { CHOSEN_COLOR } from './score.js'
 
 
 const EXPLOSION_FORCE = {
   [RED]: 50,
-  [GRAY]: -20 * (CHOSEN_COLOR === GRAY ? 3 : 1),
+  [GRAY]: -20,
   [ORANGE]: 5,
   [BLUE]: 0,
   [PURPLE]: 20,
