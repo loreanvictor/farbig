@@ -1,4 +1,4 @@
-import { BLUE } from './colors.js'
+import { BLUE, ORANGE, WHITE, changeColor } from './colors.js'
 
 
 export function freeze(box, time) {
@@ -30,4 +30,8 @@ export function unfreeze(box) {
   box.plugin.frost = 0
   box.render.strokeStyle = box.render.fillStyle
   box.render.lineWidth = 0
+
+  if (box.tag === ORANGE) {
+    changeColor(box, WHITE)
+  }
 }
