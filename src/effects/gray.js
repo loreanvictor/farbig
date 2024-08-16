@@ -26,7 +26,7 @@ export const addGrayEffect = (engine) => {
         } else {
           engine.gravity.scale = DEFAULT_GRAVITY
           attractColor = undefined
-          indicator.style.borderColor = 'transparent'
+          // indicator.style.borderColor = 'transparent'
         }
       }, 300)
     }
@@ -41,7 +41,7 @@ export const addGrayEffect = (engine) => {
   listen('touch:box', box => {
     if (engine.gravity.scale === 0) {
       attractColor = box.tag
-      indicator.style.borderColor = attractColor
+      // indicator.style.borderColor = attractColor
     }
   })
 
