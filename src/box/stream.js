@@ -57,7 +57,7 @@ export const createBoxStream = (engine, config) => {
     } else {
       clearInterval(interval)
     }
-  }, 200)
+  }, 300)
 
   Matter.World.add(engine.world, boxes)
   attachStreamIndicator(config.rows * config.columns)
