@@ -1,5 +1,5 @@
-const CACHE_NAME = 'farbig-cache-int-v0.2.0'
-const EXTERNAL_CACHE_NAME = 'farbig-cache-ext-v0.0.1'
+const CACHE_NAME = 'farbig-cache-int-v0.2.2'
+const EXTERNAL_CACHE_NAME = 'farbig-cache-ext-v0.2.2'
 
 const ASSETS_TO_CACHE = [
   '/',
@@ -24,7 +24,6 @@ const ASSETS_TO_CACHE = [
   '/src/effects/red.js',
   '/src/effects/white.js',
 
-  '/src/attract.js',
   '/src/dispatch.js',
   '/src/explode.js',
   '/src/match.js',
@@ -39,6 +38,7 @@ const ASSETS_TO_CACHE = [
 const EXTERNAL_ASSETS = [
   'https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.18.0/matter.min.js',
   'https://unpkg.com/pure-rand/lib/esm/pure-rand.js',
+  'https://esm.sh/v135/comma-number@2.1.0/es2022/comma-number.mjs',
 ]
 
 self.addEventListener('install', (event) => {

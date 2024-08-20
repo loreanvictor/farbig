@@ -1,3 +1,5 @@
+import comma from 'https://esm.sh/v135/comma-number@2.1.0/es2022/comma-number.mjs'
+
 import { listen } from './dispatch.js'
 import { RED, GRAY, ORANGE, BLUE, PURPLE, WHITE, GREEN } from './box/colors.js'
 import { seed } from './random.js'
@@ -9,16 +11,16 @@ const personalBest = parseInt(localStorage.getItem('highScore') ?? 0)
 let personalBestToast = false
 let dayRecordToast = false
 let score = 0
-document.getElementById('tscore').textContent = `${dayRecord}`
-document.getElementById('record').textContent = `${personalBest}`
+document.getElementById('tscore').textContent = `${comma(dayRecord)}`
+document.getElementById('record').textContent = `${comma(personalBest)}`
 
 function updateScore() {
-  document.getElementById('score-val').textContent = `${score}`
-  document.getElementById('fscore').textContent = `${score}`
+  document.getElementById('score-val').textContent = `${comma(score)}`
+  document.getElementById('fscore').textContent = `${comma(score)}`
 
   if (score > personalBest) {
     localStorage.setItem('highScore', `${score}`)
-    document.getElementById('record').textContent = `${score}`
+    document.getElementById('record').textContent = `${comma(score)}`
 
     if (!personalBestToast) {
       setTimeout(() => showCombo('New Personal Best!'), 500)
@@ -29,7 +31,7 @@ function updateScore() {
 
   if (score > dayRecord) {
     localStorage.setItem(dayRecordKey, `${score}`)
-    document.getElementById('tscore').textContent = `${score}`
+    document.getElementById('tscore').textContent = `${comma(score)}`
 
     if (!dayRecordToast) {
       setTimeout(() => showCombo('New Record!'), 500)

@@ -1,6 +1,6 @@
 import { listen } from '../dispatch.js'
 import { random } from '../random.js'
-import { CHOSEN_COLOR, addScore } from '../score.js'
+import { addScore } from '../score.js'
 import { ORANGE, BOX_CONFIG, unfreeze, changeColor } from '../box/index.js'
 
 

@@ -6,21 +6,28 @@ import { PURPLE, BOX_CONFIG, changeColor } from '../box/index.js'
 export const addPurpleEffect = (engine) => {
   let purplePower = 0
 
-  const MAX_PURPLE = 81
+  const MAX_PURPLE = 9
   const purpleInd = document.getElementById('purple')
 
   const powerPurple = (mul) => {
-    const mult = CHOSEN_COLOR === PURPLE ? 8 : 1
-    purplePower = Math.min(MAX_PURPLE, purplePower + mul * mult)
-    purpleInd.style.transform = `scaleX(${Math.sqrt(purplePower / MAX_PURPLE)})`
+    purplePower = Math.min(MAX_PURPLE, purplePower + mul * mul)
+    purpleInd.style.transform = `scaleX(${purplePower / MAX_PURPLE})`
   }
 
-  const consumePurple = (box, boxes) => {
-    boxes.forEach(b => {
-      if (b !== box && b.tag === PURPLE) {
-        const distance = Matter.Vector.magnitude(Matter.Vector.sub(b.position, box.position))
-        if (distance < BOX_CONFIG.SIZE * Math.sqrt(purplePower) * 2) {
-          changeColor(b, box.tag)
+  const consumePurple = (group, boxes) => {
+    const mult = CHOSEN_COLOR === PURPLE ? 4 : 1
+    const range = BOX_CONFIG.SIZE * purplePower * mult * group.length
+    const targetColor = group[0].tag
+
+    boxes.forEach(box => {
+      if (box.tag === PURPLE) {
+        const distance = group.reduce(
+          (m, b) => Math.min(m, Matter.Vector.magnitude(Matter.Vector.sub(box.position, b.position))),
+          Infinity
+        )
+
+        if (distance < range) {
+          changeColor(box, targetColor)
         }
       }
     })
@@ -29,12 +36,12 @@ export const addPurpleEffect = (engine) => {
     purpleInd.style.transform = 'scaleX(0)'
   }
 
-  listen('pop:box', ({ box, group, tapped }) => {
-    if (box.tag === PURPLE) {
+  listen('pop:group', ({ group, tapped }) => {
+    if (group[0].tag === PURPLE) {
       powerPurple(group.length)
     } else if (tapped) {
       const boxes = Matter.Composite.allBodies(engine.world).filter(b => b.kind === 'box')
-      consumePurple(box, boxes)
+      consumePurple(group, boxes)
     }
   })
 }
