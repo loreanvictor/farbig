@@ -15,7 +15,7 @@ export const addPurpleEffect = (engine) => {
   }
 
   const consumePurple = (group, boxes) => {
-    const mult = CHOSEN_COLOR === PURPLE ? 4 : 1
+    const mult = CHOSEN_COLOR === PURPLE ? 8 : 2
     const range = BOX_CONFIG.SIZE * purplePower * mult * group.length
     const targetColor = group[0].tag
 
