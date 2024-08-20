@@ -1,4 +1,4 @@
-import { addScore } from '../score.js'
+import { addScore, CHOSEN_COLOR } from '../score.js'
 import { listen } from '../dispatch.js'
 import { RED } from '../box/index.js'
 
@@ -7,8 +7,8 @@ export const addRedEffect = () => {
   let redTimer
   let redCombo = 0
 
-  const MAX_RED = 512
-  const RED_DURATION = 3000
+  const MAX_RED = 1024
+  const RED_DURATION = CHOSEN_COLOR === RED ? 4000 : 3000
 
   const activateRed = (mul) => {
     clearTimeout(redTimer)

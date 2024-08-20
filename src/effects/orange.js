@@ -20,7 +20,7 @@ export const addOrangeEffect = (engine) => {
       })
 
       let converted = 0
-      const chance = Math.min(touched.length * touched.length / 3, 80)
+      const chance = Math.min(touched.length * touched.length / 3.5, 80)
 
       touched.forEach(box => {
         unfreeze(box)
