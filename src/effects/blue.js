@@ -7,7 +7,7 @@ export const addBlueEffect = (engine) => {
   listen('pop:box', ({ box, group }) => {
     if (box.tag === BLUE) {
       const boxes = Matter.Composite.allBodies(engine.world).filter(b => b.kind === 'box')
-      const mult = CHOSEN_COLOR === BLUE ? 2 : 1
+      const mult = CHOSEN_COLOR === BLUE ? 1.5 : 1
 
       boxes.forEach(b => {
         if (b.tag !== BLUE) {
