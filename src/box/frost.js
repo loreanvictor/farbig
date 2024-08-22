@@ -1,4 +1,4 @@
-import { BLUE, ORANGE, WHITE, changeColor } from './colors.js'
+import { BLUE, ORANGE, GRAY, changeColor } from './colors.js'
 
 
 export function freeze(box, time) {
@@ -32,6 +32,6 @@ export function unfreeze(box) {
   box.render.lineWidth = 0
 
   if (box.tag === ORANGE) {
-    changeColor(box, WHITE)
+    changeColor(box, GRAY)
   }
 }
