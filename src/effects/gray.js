@@ -53,7 +53,7 @@ export const addGrayEffect = (engine) => {
           const f = Matter.Vector.mult(
             Matter.Vector.normalise(
               Matter.Vector.sub(pos, box.position)
-            ), 0.05
+            ), 0.1
           )
   
           Matter.Body.applyForce(box, pos, f)
