@@ -94,7 +94,7 @@ export function addScore(combo, color) {
   let C = combo * SCOREMAP[color]
   if (color === GREEN) {
     const croot = Math.sqrt(combo)
-    C = Math.floor((croot * croot * croot) / 2.25)
+    C = Math.floor((croot * croot * croot) / 2)
   }
 
   if (color === CHOSEN_COLOR) {
