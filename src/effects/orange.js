@@ -4,8 +4,10 @@ import { addScore } from '../score.js'
 import { ORANGE, BOX_CONFIG, unfreeze, changeColor } from '../box/index.js'
 
 
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
+
 export const addOrangeEffect = (engine) => {
-  listen('pop:group', ({ group }) => {
+  listen('pop:group', async ({ group }) => {
     if (group[0].tag === ORANGE) {
       const boxes = Matter.Composite.allBodies(engine.world).filter(b => b.kind === 'box')
       const maxdist = BOX_CONFIG.SIZE * 1.5
@@ -19,18 +21,23 @@ export const addOrangeEffect = (engine) => {
         ) < maxdist
       })
 
-      let converted = 0
+      const converted = []
       const chance = Math.min(touched.length * touched.length / 3.75, 80)
 
       touched.forEach(box => {
         unfreeze(box)
         if (random(0, 100) < chance) {
-          changeColor(box, ORANGE)
-          converted++
+          converted.push(box)
         }
       })
 
-      addScore(converted * converted * 11, ORANGE)
+      const sorted = converted.sort((a, b) => b.position.y - a.position.y)
+
+      for (let i = 0; i < sorted.length; i++) {
+        await sleep(40)
+        changeColor(sorted[i], ORANGE)
+        addScore(converted.length * 11, ORANGE)
+      }
     }
   })
 }

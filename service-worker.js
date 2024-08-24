@@ -39,6 +39,10 @@ const EXTERNAL_ASSETS = [
   'https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.18.0/matter.min.js',
   'https://unpkg.com/pure-rand/lib/esm/pure-rand.js',
   'https://esm.sh/v135/comma-number@2.1.0/es2022/comma-number.mjs',
+
+  'https://esm.sh/v135/color@4.2.3/es2022/color.mjs',
+  'https://esm.sh/v135/color-string@1.9.1/es2022/color-string.mjs',
+  'https://esm.sh/v135/color-convert@2.0.1/es2022/color-convert.mjs'
 ]
 
 self.addEventListener('install', (event) => {
