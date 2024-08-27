@@ -20,7 +20,7 @@ export const addWhiteEffect = (engine) => {
         if (
           box.tag !== WHITE &&
           !boxes.some(b => b.tag === box.tag && b.isStatic) &&
-          distance < BOX_CONFIG.SIZE * gmult * 1.2 * mult
+          distance < BOX_CONFIG.SIZE * gmult * 1.5 * mult
         ) {
           const colors = all.filter(c => c !== box.tag)
           const color = colors[random(0, colors.length - 1)]
