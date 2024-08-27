@@ -28,7 +28,7 @@ const findKin = (boxes, box, maxvel = undefined) => {
         ) &&
         (
           Matter.Collision.collides(box, other) ||
-          Matter.Vector.magnitude(Matter.Vector.sub(box.position, other.position)) < 1.4 * BOX_CONFIG.SIZE
+          Matter.Vector.magnitude(Matter.Vector.sub(box.position, other.position)) < 1.3 * BOX_CONFIG.SIZE
         )
     )
 }
