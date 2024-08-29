@@ -36,7 +36,7 @@ export const addOrangeEffect = (engine) => {
       for (let i = 0; i < sorted.length; i++) {
         await sleep(40)
         changeColor(sorted[i], ORANGE)
-        addScore(converted.length * 11, ORANGE)
+        addScore(converted.length * 13, ORANGE)
       }
     }
   })

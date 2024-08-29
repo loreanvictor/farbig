@@ -71,12 +71,12 @@ function showCombo(msg) {
 
 const SCOREMAP = {
   [RED]: 1,
-  [BLUE]: 1,
+  [BLUE]: 10,
   [ORANGE]: 1,
   [PURPLE]: 1,
   [WHITE]: 1,
   [GREEN]: 1,
-  [GRAY]: 5,
+  [GRAY]: 10,
 }
 
 const BASESCORE = 10
@@ -94,7 +94,7 @@ export function addScore(combo, color) {
   let C = combo * SCOREMAP[color]
   if (color === GREEN) {
     const croot = Math.sqrt(combo)
-    C = Math.floor((croot * croot * croot) / 2)
+    C = Math.floor((croot * croot * croot) / 1.6)
   }
 
   if (color === CHOSEN_COLOR) {

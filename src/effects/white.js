@@ -33,6 +33,7 @@ export const addWhiteEffect = (engine) => {
             if (!toBeChanged.some(b => b.tag === color)) {
               colors.push(color)
               colors.push(color)
+              colors.push(color)
             }
           })
 
