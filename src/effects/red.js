@@ -8,7 +8,7 @@ export const addRedEffect = () => {
   let redCombo = 0
 
   const MAX_RED = 1024
-  const RED_DURATION = CHOSEN_COLOR === RED ? 4000 : 3000
+  const RED_DURATION = CHOSEN_COLOR === RED ? 3500 : 3000
 
   const activateRed = (mul) => {
     clearTimeout(redTimer)
