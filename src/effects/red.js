@@ -20,7 +20,7 @@ export const addRedEffect = () => {
       redInd.style.transform = 'scaleX(0)'
     }, 50)
 
-    const scoreCoeff = (Math.floor((redTimer / RED_DURATION) * 3) + 1) / 3
+    const scoreCoeff = (Math.floor((redTimer / RED_DURATION) * 5) + 1) / 5
     addScore(Math.max(2, Math.floor(redCombo * scoreCoeff)), RED)
     redTimer = RED_DURATION
   }
