@@ -7,11 +7,10 @@ export const addRedEffect = () => {
   let redTimer
   let redCombo = 0
 
-  const MAX_RED = 1024
+  const MAX_RED = 2048
   const RED_DURATION = CHOSEN_COLOR === RED ? 3500 : 3000
 
   const activateRed = (mul) => {
-    clearTimeout(redTimer)
     redCombo = Math.min(redCombo + Math.floor(Math.max(mul * mul, 1)), MAX_RED)
     const redInd = document.getElementById('red')
     redInd.style.transition = 'none'
@@ -21,9 +20,19 @@ export const addRedEffect = () => {
       redInd.style.transform = 'scaleX(0)'
     }, 50)
 
-    addScore(Math.max(2, redCombo), RED)
-    redTimer = setTimeout(() => redCombo = 0, RED_DURATION)
+    const scoreCoeff = (Math.floor((1 - redTimer / RED_DURATION) * 3) + 1) / 3
+    addScore(Math.max(2, redCombo) * scoreCoeff, RED)
+    redTimer = RED_DURATION
   }
+
+  setInterval(() => {
+    if (redTimer > 0) {
+      redTimer -= 10
+    } else {
+      redTimer = 0
+      redCombo = 0
+    }
+  }, 10)
 
   listen('pop:box', ({ box, group }) => {
     if (box.tag === RED) {
