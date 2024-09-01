@@ -21,7 +21,7 @@ export const addRedEffect = () => {
     }, 50)
 
     const scoreCoeff = (Math.floor((1 - redTimer / RED_DURATION) * 3) + 1) / 3
-    addScore(Math.max(2, redCombo) * scoreCoeff, RED)
+    addScore(Math.max(2, Math.floor(redCombo * scoreCoeff)), RED)
     redTimer = RED_DURATION
   }
 
