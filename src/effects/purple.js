@@ -1,13 +1,11 @@
 import { listen } from '../dispatch.js'
-import { random } from '../random.js'
 import { CHOSEN_COLOR } from '../score.js'
-import { PURPLE, BOX_CONFIG, changeColor, createBox } from '../box/index.js'
+import { PURPLE, BOX_CONFIG, changeColor } from '../box/index.js'
 
 
 export const addPurpleEffect = (engine) => {
   let purplePower = 0
 
-  const REPURPLE_CHANCE = CHOSEN_COLOR === PURPLE ? 15 : 30
   const MAX_PURPLE = 9
   const purpleInd = document.getElementById('purple')
 
@@ -30,10 +28,6 @@ export const addPurpleEffect = (engine) => {
 
         if (distance < range) {
           changeColor(box, targetColor)
-          if (random(0, 100) > REPURPLE_CHANCE) {
-            const newBox = createBox(random(50, 300), random(-1000, -2000), PURPLE)
-            Matter.World.add(engine.world, newBox)
-          }
         }
       }
     })
