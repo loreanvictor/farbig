@@ -42,9 +42,7 @@ export const addPurpleEffect = (engine) => {
 
   listen('create:box', ({ box }) => {
     if (turnedPurple > 0) {
-      console.log('CREATE!')
       if (random(0, 100) < REPURPLE_CHANCE) {
-        console.log('PURPLE!')
         changeColor(box, PURPLE)
       }
 
