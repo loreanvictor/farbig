@@ -1,5 +1,5 @@
 import { random } from '../random.js'
-import { listen } from '../dispatch.js'
+import { listen, dispatch } from '../dispatch.js'
 import { COLORS } from './colors.js'
 import { createBox, BOX_CONFIG } from './box.js'
 
@@ -37,6 +37,8 @@ export const createBoxStream = (engine, config) => {
       const color = colorArray[colorIndex]
       const box = createBox(x, y, color)
       Matter.Composite.add(boxes, box)
+      dispatch('create:box', { box, row: i, column: j })
+
       colorIndex++
     }
   }

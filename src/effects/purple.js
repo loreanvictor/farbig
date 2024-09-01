@@ -1,13 +1,16 @@
 import { listen } from '../dispatch.js'
 import { CHOSEN_COLOR } from '../score.js'
+import { random } from '../random.js'
 import { PURPLE, BOX_CONFIG, changeColor } from '../box/index.js'
 
 
 export const addPurpleEffect = (engine) => {
   let purplePower = 0
 
+  const REPURPLE_CHANCE = CHOSEN_COLOR === PURPLE ? 70 : 30
   const MAX_PURPLE = 9
   const purpleInd = document.getElementById('purple')
+  let turnedPurple = 0
 
   const powerPurple = (mul) => {
     purplePower = Math.min(MAX_PURPLE, purplePower + mul * mul)
@@ -28,6 +31,7 @@ export const addPurpleEffect = (engine) => {
 
         if (distance < range) {
           changeColor(box, targetColor)
+          turnedPurple++
         }
       }
     })
@@ -35,6 +39,18 @@ export const addPurpleEffect = (engine) => {
     purplePower = 0
     purpleInd.style.transform = 'scaleX(0)'
   }
+
+  listen('create:box', ({ box }) => {
+    if (turnedPurple > 0) {
+      console.log('CREATE!')
+      if (random(0, 100) < REPURPLE_CHANCE) {
+        console.log('PURPLE!')
+        changeColor(box, PURPLE)
+      }
+
+      turnedPurple--
+    }
+  })
 
   listen('pop:group', ({ group, tapped }) => {
     if (group[0].tag === PURPLE) {
