@@ -1,7 +1,7 @@
 export const BOX_CONFIG = {
   SIZE: 72,
   RADIUS: 8,
-  RESTITUTION: 0.8,
+  RESTITUTION: 0.9,
   FRICTION: 0,
 }
 
