@@ -24,6 +24,10 @@ export function freeze(box, time) {
   }
 }
 
+export function isFrozen(box) {
+  return box.plugin.frost > 0
+}
+
 
 export function unfreeze(box) {
   Matter.Body.setStatic(box, false)

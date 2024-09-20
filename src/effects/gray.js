@@ -1,5 +1,5 @@
 import { listen } from '../dispatch.js'
-import { CHOSEN_COLOR } from '../score.js'
+import { CHOSEN_COLOR, addScore } from '../score.js'
 import { GRAY } from '../box/index.js'
 
 
@@ -11,6 +11,7 @@ export const addGrayEffect = (engine) => {
   const maxGravCounter = 12
   const DEFAULT_GRAVITY = 0.001
   let attractColor = undefined
+  let vaccumCombo = 0
   
   const turnGravityOff = (mul = 1) => {
     const mult = CHOSEN_COLOR === GRAY ? 2 : 1
@@ -26,7 +27,7 @@ export const addGrayEffect = (engine) => {
         } else {
           engine.gravity.scale = DEFAULT_GRAVITY
           attractColor = undefined
-          // indicator.style.borderColor = 'transparent'
+          vaccumCombo = 0
         }
       }, 300)
     }
@@ -38,10 +39,16 @@ export const addGrayEffect = (engine) => {
     }
   })
 
+  listen('pop:group', ({ group }) => {
+    if (engine.gravity.scale === 0) {
+      vaccumCombo += group.length * 3
+      addScore(vaccumCombo, GRAY)
+    }
+  })
+
   listen('touch:box', box => {
     if (engine.gravity.scale === 0) {
       attractColor = box.tag
-      // indicator.style.borderColor = attractColor
     }
   })
 
@@ -53,7 +60,7 @@ export const addGrayEffect = (engine) => {
           const f = Matter.Vector.mult(
             Matter.Vector.normalise(
               Matter.Vector.sub(pos, box.position)
-            ), 0.1
+            ), 0.1 * Math.sqrt(antiGravCounter)
           )
   
           Matter.Body.applyForce(box, pos, f)

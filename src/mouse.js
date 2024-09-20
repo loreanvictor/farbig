@@ -10,6 +10,12 @@ const addBoxTouchListener = (mouse, engine) => {
       dispatch('touch:box', event.body)
     }
   })
+
+  Matter.Events.on(mouse, 'enddrag', event => {
+    if (event.body.kind === 'box') {
+      setTimeout(() => event.body.plugin.touched = false, 2000)
+    }
+  })
 }
 
 const addBoxTapListener = (mouse, engine) => {
