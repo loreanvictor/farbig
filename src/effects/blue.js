@@ -22,7 +22,7 @@ export const addBlueEffect = (engine) => {
 
   listen('pop:group', ({ group }) => {
     if (group.some(box => isFrozen(box))) {
-      addScore(group.length * group.length * group.length, BLUE)
+      addScore(group.length * group.length, BLUE)
     }
   })
 }
