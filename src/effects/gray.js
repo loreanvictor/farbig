@@ -41,7 +41,7 @@ export const addGrayEffect = (engine) => {
 
   listen('pop:group', ({ group }) => {
     if (engine.gravity.scale === 0) {
-      vaccumCombo += group.length * 3
+      vaccumCombo += group.length * group.length
       addScore(vaccumCombo, GRAY)
     }
   })
@@ -60,7 +60,7 @@ export const addGrayEffect = (engine) => {
           const f = Matter.Vector.mult(
             Matter.Vector.normalise(
               Matter.Vector.sub(pos, box.position)
-            ), 0.3
+            ), 0.2
           )
   
           Matter.Body.applyForce(box, pos, f)
