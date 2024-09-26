@@ -27,7 +27,6 @@ export const addGrayEffect = (engine) => {
         } else {
           engine.gravity.scale = DEFAULT_GRAVITY
           attractColor = undefined
-          vaccumCombo = 0
         }
       }, 300)
     }
@@ -41,7 +40,7 @@ export const addGrayEffect = (engine) => {
 
   listen('pop:group', ({ group }) => {
     if (engine.gravity.scale === 0) {
-      vaccumCombo += group.length * group.length
+      vaccumCombo += Math.floor(group.length * group.length / 10)
       addScore(vaccumCombo, GRAY)
     }
   })
