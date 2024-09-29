@@ -44,7 +44,7 @@ export const addGrayEffect = (engine) => {
     }
 
     if (group[0].tag === GRAY) {
-      addScore(vaccumCombo, GRAY)
+      addScore(vaccumCombo * group.length, GRAY)
     }
   })
 
