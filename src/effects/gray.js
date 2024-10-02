@@ -40,7 +40,7 @@ export const addGrayEffect = (engine) => {
 
   listen('pop:group', ({ group }) => {
     if (engine.gravity.scale === 0) {
-      vaccumCombo += Math.floor(group.length * group.length / 25)
+      vaccumCombo += Math.floor(Math.max(0, (group.length * group.length) - 64) / 9)
     }
 
     if (group[0].tag === GRAY) {
