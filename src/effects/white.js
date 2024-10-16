@@ -4,6 +4,10 @@ import { random } from '../random.js'
 import { BOX_CONFIG, WHITE, RED, BLUE, GREEN, PURPLE, GRAY, ORANGE, changeColor } from '../box/index.js'
 
 
+// TODO: what if a box turned with white also
+//       behaved as if it was special? should check if all effects
+//       can be broken to a per box basis
+
 export const addWhiteEffect = (engine) => {
   listen('pop:group', ({ group }) => {
     if (group[0].tag === WHITE) {
@@ -20,7 +24,10 @@ export const addWhiteEffect = (engine) => {
         )
         if (
           box.tag !== WHITE &&
-          !boxes.some(b => b.tag === box.tag && b.isStatic) &&
+          // TODO: maybe this should instead only spare boxes that aren't frozen
+          //       (instead of full colors)
+          // !boxes.some(b => b.tag === box.tag && b.isStatic) &&
+          !b.isStatic &&
           distance < BOX_CONFIG.SIZE * gmult * 1.5 * mult
         ) {
           toBeChanged.push(box)
