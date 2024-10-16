@@ -2,6 +2,7 @@ import { listen } from '../dispatch.js'
 import { CHOSEN_COLOR, addScore } from '../score.js'
 import { BLUE, BOX_CONFIG, freeze, isFrozen } from '../box/index.js'
 
+// TODO: make chosen blue freeze all boxes of the same color that are touching instead of stronger freeze.
 
 export const addBlueEffect = (engine) => {
   listen('pop:box', ({ box, group }) => {
