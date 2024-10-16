@@ -27,7 +27,7 @@ export const addWhiteEffect = (engine) => {
           // TODO: maybe this should instead only spare boxes that aren't frozen
           //       (instead of full colors)
           // !boxes.some(b => b.tag === box.tag && b.isStatic) &&
-          !b.isStatic &&
+          !box.isStatic &&
           distance < BOX_CONFIG.SIZE * gmult * 1.5 * mult
         ) {
           toBeChanged.push(box)
