@@ -1,4 +1,4 @@
-import { addScore, CHOSEN_COLOR } from '../score.js'
+import { addScore } from '../score.js'
 import { listen } from '../dispatch.js'
 import { RED } from '../box/index.js'
 

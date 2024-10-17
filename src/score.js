@@ -90,6 +90,8 @@ export const CHOSEN_COLOR = _COLORS[
 
 document.getElementById('chosen').style.backgroundColor = CHOSEN_COLOR
 
+// TODO: make this color agnostic, and calculations
+//       should happen in effect of each color.
 export function addScore(combo, color) {
   let C = combo * SCOREMAP[color]
   if (color === GREEN) {
@@ -109,6 +111,7 @@ export function addScore(combo, color) {
   }
 }
 
+// TODO: move this to the effect of each color
 export const addScoreOnPop = (minmatch) => {
   listen('pop:group', ({ group }) => {
     const M = group.length - minmatch + 1

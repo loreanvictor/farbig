@@ -2,6 +2,10 @@ import { listen } from '../dispatch.js'
 import { CHOSEN_COLOR, addScore } from '../score.js'
 import { GRAY } from '../box/index.js'
 
+// TODO: make the chosen gray effect scale based on score
+//       acquired during zero-g instead of popping big groups.
+//       an alternative would be to simply make all colors behave
+//       as if they are special (except for their score) during zero-g.
 
 export const addGrayEffect = (engine) => {
   const indicator = document.getElementById('antigrav')

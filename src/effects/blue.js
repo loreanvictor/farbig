@@ -2,21 +2,21 @@ import { listen } from '../dispatch.js'
 import { CHOSEN_COLOR, addScore } from '../score.js'
 import { BLUE, BOX_CONFIG, freeze, isFrozen } from '../box/index.js'
 
-// TODO: make chosen blue freeze all boxes of the same color that are touching instead of stronger freeze.
 
 export const addBlueEffect = (engine) => {
+  const freezables = box => {
+    const boxes = Matter.Composite.allBodies(engine.world).filter(b => b.kind === 'box')
+
+    return boxes.filter(b => {
+      return b.tag !== BLUE && 
+        Matter.Vector.magnitude(Matter.Vector.sub(b.position, box.position)) < BOX_CONFIG.SIZE * 1.2
+    })
+  }
+
   listen('pop:box', ({ box, group }) => {
     if (box.tag === BLUE) {
-      const boxes = Matter.Composite.allBodies(engine.world).filter(b => b.kind === 'box')
-      const mult = CHOSEN_COLOR === BLUE ? 1.5 : 1
-
-      boxes.forEach(b => {
-        if (b.tag !== BLUE) {
-          const distance = Matter.Vector.magnitude(Matter.Vector.sub(b.position, box.position))
-          if (distance < BOX_CONFIG.SIZE * 1.2 * mult) {
-            freeze(b, 2500 * group.length * mult)
-          }
-        }
+      freezables(box).forEach(b => {
+        freeze(b, 2500 * group.length)
       })
     }
   })
@@ -26,4 +26,18 @@ export const addBlueEffect = (engine) => {
       addScore(group.length * group.length, BLUE)
     }
   })
+
+  if (CHOSEN_COLOR === BLUE) {
+    listen('freeze:box', ({ box, refreeze }) => {
+      if (!refreeze) {
+        setTimeout(() => {
+          freezables(box).forEach(b => {
+            if (!isFrozen(b) && b.tag === box.tag) {
+              freeze(b, box.plugin.frost * .9)
+            }
+          })
+        }, 60)
+      }
+    })
+  }
 }

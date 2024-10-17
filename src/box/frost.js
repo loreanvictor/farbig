@@ -1,3 +1,4 @@
+import { dispatch } from '../dispatch.js'
 import { BLUE, ORANGE, GRAY, changeColor } from './colors.js'
 
 
@@ -7,9 +8,13 @@ export function freeze(box, time) {
     box.render.strokeStyle = BLUE
   }
 
+  const refreeze = isFrozen(box)
+
   box.plugin.frost = box.plugin.frost || 0
   box.plugin.frost = Math.min(box.plugin.frost + time, 7000)
   box.render.lineWidth = box.plugin.frost / 250
+
+  dispatch('freeze:box', { box, refreeze })
 
   if (!box.plugin.unfreezeInterval) {
     box.plugin.unfreezeInterval = setInterval(() => {
@@ -28,8 +33,11 @@ export function isFrozen(box) {
   return box.plugin.frost > 0
 }
 
-
 export function unfreeze(box) {
+  if (isFrozen(box)) {
+    dispatch('unfreeze:box', { box })
+  }
+
   Matter.Body.setStatic(box, false)
   box.plugin.frost = 0
   box.render.strokeStyle = box.render.fillStyle
