@@ -6,6 +6,7 @@ import { GRAY } from '../box/index.js'
 //       acquired during zero-g instead of popping big groups.
 //       an alternative would be to simply make all colors behave
 //       as if they are special (except for their score) during zero-g.
+// TODO: gray potentiallyy needs rebalancing as well, as it is probably overperforming.
 
 export const addGrayEffect = (engine) => {
   const indicator = document.getElementById('antigrav')
