@@ -1,10 +1,12 @@
 import { listen } from '../dispatch.js'
-import { CHOSEN_COLOR } from '../score.js'
 import { random } from '../random.js'
 import { PURPLE, BOX_CONFIG, changeColor } from '../box/index.js'
+import { CHOSEN_COLOR, addScoreOnPop, matchScore } from './common.js'
 
 
-export const addPurpleEffect = (engine) => {
+export const addPurpleEffect = (engine, config) => {
+  addScoreOnPop(PURPLE, matchScore(config.MIN_MATCH))
+
   let purplePower = 0
 
   const REPURPLE_CHANCE = CHOSEN_COLOR === PURPLE ? 70 : 30

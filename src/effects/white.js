@@ -1,10 +1,12 @@
 import { listen } from '../dispatch.js'
-import { CHOSEN_COLOR } from '../score.js'
 import { random } from '../random.js'
 import { BOX_CONFIG, WHITE, RED, BLUE, GREEN, PURPLE, GRAY, ORANGE, changeColor } from '../box/index.js'
+import { CHOSEN_COLOR, addScoreOnPop, matchScore } from './common.js'
 
 
-export const addWhiteEffect = (engine) => {
+export const addWhiteEffect = (engine, config) => {
+  addScoreOnPop(WHITE, matchScore(config.MIN_MATCH))
+
   listen('pop:group', ({ group }) => {
     if (group[0].tag === WHITE) {
       const boxes = Matter.Composite.allBodies(engine.world).filter(b => b.kind === 'box')

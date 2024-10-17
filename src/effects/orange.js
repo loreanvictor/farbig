@@ -2,11 +2,14 @@ import { listen } from '../dispatch.js'
 import { random } from '../random.js'
 import { addScore } from '../score.js'
 import { ORANGE, BOX_CONFIG, unfreeze, changeColor } from '../box/index.js'
+import { addScoreOnPop, matchScore, chosenBonus } from './common.js'
 
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
-export const addOrangeEffect = (engine) => {
+export const addOrangeEffect = (engine, config) => {
+  addScoreOnPop(ORANGE, matchScore(config.MIN_MATCH))
+
   listen('pop:group', async ({ group }) => {
     if (group[0].tag === ORANGE) {
       const boxes = Matter.Composite.allBodies(engine.world).filter(b => b.kind === 'box')
@@ -36,7 +39,7 @@ export const addOrangeEffect = (engine) => {
       for (let i = 0; i < sorted.length; i++) {
         await sleep(40)
         changeColor(sorted[i], ORANGE)
-        addScore(converted.length * converted.length, ORANGE)
+        addScore(converted.length * converted.length * chosenBonus(ORANGE), ORANGE)
       }
     }
   })

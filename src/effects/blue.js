@@ -1,9 +1,14 @@
 import { listen } from '../dispatch.js'
-import { CHOSEN_COLOR, addScore } from '../score.js'
+import { addScore } from '../score.js'
 import { BLUE, BOX_CONFIG, freeze, isFrozen } from '../box/index.js'
+import { CHOSEN_COLOR, addScoreOnPop, matchScore, chosenBonus } from './common.js'
 
 
-export const addBlueEffect = (engine) => {
+const BLUE_SCORE = 100
+
+export const addBlueEffect = (engine, config) => {
+  addScoreOnPop(BLUE, matchScore(config.MIN_MATCH, BLUE_SCORE))
+
   const freezables = box => {
     const boxes = Matter.Composite.allBodies(engine.world).filter(b => b.kind === 'box')
 
@@ -23,7 +28,7 @@ export const addBlueEffect = (engine) => {
 
   listen('pop:group', ({ group }) => {
     if (group.some(box => isFrozen(box))) {
-      addScore(group.length * group.length, BLUE)
+      addScore(group.length * group.length * chosenBonus(BLUE), BLUE)
     }
   })
 

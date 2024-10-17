@@ -4,13 +4,15 @@ import { addPurpleEffect } from './purple.js'
 import { addBlueEffect } from './blue.js'
 import { addOrangeEffect } from './orange.js'
 import { addWhiteEffect } from './white.js'
+import { addGreenEffect } from './green.js'
 
 
-export const addColorEffects = (engine) => {
-  addGrayEffect(engine)
-  addRedEffect(engine)
-  addPurpleEffect(engine)
-  addBlueEffect(engine)
-  addOrangeEffect(engine)
-  addWhiteEffect(engine)
+export const addColorEffects = (engine, config) => {
+  addGrayEffect(engine, config)
+  addRedEffect(engine, config)
+  addPurpleEffect(engine, config)
+  addBlueEffect(engine, config)
+  addOrangeEffect(engine, config)
+  addWhiteEffect(engine, config)
+  addGreenEffect(engine, config)
 }

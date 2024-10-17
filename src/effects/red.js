@@ -1,9 +1,12 @@
 import { addScore } from '../score.js'
 import { listen } from '../dispatch.js'
 import { RED } from '../box/index.js'
+import { addScoreOnPop, matchScore, chosenBonus } from './common.js'
 
 
-export const addRedEffect = () => {
+export const addRedEffect = (_, config) => {
+  addScoreOnPop(RED, matchScore(config.MIN_MATCH))
+
   let redTimer
   let redCombo = 0
 
@@ -21,7 +24,7 @@ export const addRedEffect = () => {
     }, 50)
 
     const scoreCoeff = (Math.floor((redTimer / RED_DURATION) * 5) + 1) / 5
-    addScore(Math.max(2, Math.floor(redCombo * scoreCoeff)), RED)
+    addScore(Math.max(2, Math.floor(redCombo * scoreCoeff)) * chosenBonus(RED), RED)
     redTimer = RED_DURATION
   }
 

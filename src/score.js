@@ -1,7 +1,6 @@
 import comma from 'https://esm.sh/v135/comma-number@2.1.0/es2022/comma-number.mjs'
 
-import { listen } from './dispatch.js'
-import { RED, GRAY, ORANGE, BLUE, PURPLE, WHITE, GREEN } from './box/colors.js'
+import { dispatch } from './dispatch.js'
 import { seed } from './random.js'
 
 
@@ -69,53 +68,14 @@ function showCombo(msg) {
   comboMarker.addEventListener('transitionend', () => comboMarker.remove())
 }
 
-const SCOREMAP = {
-  [RED]: 1,
-  [BLUE]: 10,
-  [ORANGE]: 1,
-  [PURPLE]: 1,
-  [WHITE]: 1,
-  [GREEN]: 1,
-  [GRAY]: 10,
-}
 
-const BASESCORE = 10
-
-const _COLORS = Object.keys(SCOREMAP)
-export const CHOSEN_COLOR = _COLORS[
-  (
-    Math.floor(new Date().getTime() / (1000 * 60 * 60))
-  ) % _COLORS.length
-]
-
-document.getElementById('chosen').style.backgroundColor = CHOSEN_COLOR
-
-// TODO: make this color agnostic, and calculations
-//       should happen in effect of each color.
-export function addScore(combo, color) {
-  let C = combo * SCOREMAP[color]
-  if (color === GREEN) {
-    const croot = Math.sqrt(combo)
-    C = Math.max(Math.floor((croot * croot * croot) / 1.4), .1)
-  }
-
-  if (color === CHOSEN_COLOR) {
-    C *= 2
-  }
-
-  score += Math.floor(C * BASESCORE)
+export function addScore(added, color) {
+  score += added
   updateScore()
 
-  if(C > 1) {
-    cueCombo(C)
-  }
-}
+  dispatch('score:add', { added, score, color })
 
-// TODO: move this to the effect of each color
-export const addScoreOnPop = (minmatch) => {
-  listen('pop:group', ({ group }) => {
-    const M = group.length - minmatch + 1
-    const combo = M > 0 ? M * M : 0.1
-    addScore(combo, group[0].tag)
-  })
+  if(added > 10) {
+    cueCombo(added)
+  }
 }

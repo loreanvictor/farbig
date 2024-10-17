@@ -105,7 +105,6 @@
 
       import { addMatchOnTap, addAutoMatch } from './src/match.js'
       import { addPopOnMatch } from './src/pop.js'
-      import { addScoreOnPop } from './src/score.js'
       import { addExplodeOnPop } from './src/explode.js'
       import { addColorEffects } from './src/effects/index.js'
 
@@ -154,9 +153,9 @@
       addMatchOnTap(engine)
       addAutoMatch(engine, CONFIG.MIN_MATCH, CONFIG.MAX_VEL)
       addPopOnMatch(engine, boxes, CONFIG.MIN_MATCH)
-      addScoreOnPop(CONFIG.MIN_MATCH)
+      // addScoreOnPop(CONFIG.MIN_MATCH)
       addExplodeOnPop(engine)
-      addColorEffects(engine)
+      addColorEffects(engine, CONFIG)
 
       listen('game-over', () => showMenu())
 
