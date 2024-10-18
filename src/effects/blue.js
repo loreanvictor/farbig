@@ -32,7 +32,7 @@ export const addBlueEffect = (engine, config) => {
     }
   })
 
-  const FROST_SPREAD_FALLOFF = CHOSEN_COLOR === BLUE ? .9 : .5
+  const FROST_SPREAD_FALLOFF = CHOSEN_COLOR === BLUE ? .95 : .45
 
   listen('freeze:box', ({ box, refreeze }) => {
     if (!refreeze) {

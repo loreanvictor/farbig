@@ -9,7 +9,7 @@ export const addPurpleEffect = (engine, config) => {
 
   let purplePower = 0
 
-  const REPURPLE_CHANCE = CHOSEN_COLOR === PURPLE ? 70 : 30
+  const REPURPLE_CHANCE = CHOSEN_COLOR === PURPLE ? 85 : 30
   const MAX_PURPLE = 9
   const purpleInd = document.getElementById('purple')
   let turnedPurple = 0
@@ -20,7 +20,7 @@ export const addPurpleEffect = (engine, config) => {
   }
 
   const consumePurple = (group, boxes) => {
-    const mult = CHOSEN_COLOR === PURPLE ? 8 : 2
+    const mult = CHOSEN_COLOR === PURPLE ? 12 : 2
     const range = BOX_CONFIG.SIZE * purplePower * mult * group.length
     const targetColor = group[0].tag
 

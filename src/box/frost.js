@@ -3,7 +3,7 @@ import { BLUE, ORANGE, GRAY, changeColor } from './colors.js'
 
 
 export function freeze(box, time) {
-  if (time < 20) {
+  if (time < 100) {
     return
   }
 
