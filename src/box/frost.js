@@ -3,6 +3,10 @@ import { BLUE, ORANGE, GRAY, changeColor } from './colors.js'
 
 
 export function freeze(box, time) {
+  if (time < 20) {
+    return
+  }
+
   if (!box.isStatic) {
     Matter.Body.setStatic(box, true)
     box.render.strokeStyle = BLUE

@@ -32,17 +32,17 @@ export const addBlueEffect = (engine, config) => {
     }
   })
 
-  if (CHOSEN_COLOR === BLUE) {
-    listen('freeze:box', ({ box, refreeze }) => {
-      if (!refreeze) {
-        setTimeout(() => {
-          freezables(box).forEach(b => {
-            if (!isFrozen(b) && b.tag === box.tag) {
-              freeze(b, box.plugin.frost * .9)
-            }
-          })
-        }, 60)
-      }
-    })
-  }
+  const FROST_SPREAD_FALLOFF = CHOSEN_COLOR === BLUE ? .9 : .5
+
+  listen('freeze:box', ({ box, refreeze }) => {
+    if (!refreeze) {
+      setTimeout(() => {
+        freezables(box).forEach(b => {
+          if (!isFrozen(b) && b.tag === box.tag) {
+            freeze(b, box.plugin.frost * FROST_SPREAD_FALLOFF)
+          }
+        })
+      }, 60)
+    }
+  })
 }

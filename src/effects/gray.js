@@ -4,7 +4,7 @@ import { GRAY } from '../box/index.js'
 import { CHOSEN_COLOR, addScoreOnPop, matchScore, chosenBonus } from './common.js'
 
 
-export const GRAY_SCORE = 100
+export const GRAY_SCORE = 10
 export const MAX_GRAV_COUNTER = 12
 
 const isGravityOff = engine => engine.gravity.scale === 0
@@ -54,10 +54,8 @@ const addZeroGBonus = engine => {
   })
 
   listen('pop:group', ({ group }) => {
-    console.log(vaccumCombo)
-
     if (group[0].tag === GRAY) {
-      addScore(Math.floor(group.length * vaccumCombo / 16) * chosenBonus(GRAY), GRAY)
+      addScore(Math.floor(group.length * vaccumCombo / 1024) * chosenBonus(GRAY), GRAY)
     }
   })
 }

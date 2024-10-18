@@ -8,7 +8,7 @@ export const addGreenEffect = () => {
   addScoreOnPop(GREEN, (count) =>
     Math.max(
       Math.floor(
-        (count * count * count) / 1.4
+        (count * count * count) / 1.25
       ) * score, 1
     )
   )

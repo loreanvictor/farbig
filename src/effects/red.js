@@ -10,11 +10,12 @@ export const addRedEffect = (_, config) => {
   let redTimer
   let redCombo = 0
 
-  const MAX_RED = 2048
-  const RED_DURATION = 3000
+  const MAX_RED = 4096
+  const RED_DURATION = 4000
+  const RED_SCORE_STEPS = 5
 
   const activateRed = (mul) => {
-    redCombo = Math.min(redCombo + Math.floor(Math.max(mul * mul, 1)), MAX_RED)
+    redCombo = Math.min(redCombo + Math.floor(Math.max(mul * mul, 8)), MAX_RED)
     const redInd = document.getElementById('red')
     redInd.style.transition = 'none'
     redInd.style.transform = 'scaleX(1)'
@@ -23,7 +24,7 @@ export const addRedEffect = (_, config) => {
       redInd.style.transform = 'scaleX(0)'
     }, 50)
 
-    const scoreCoeff = (Math.floor((redTimer / RED_DURATION) * 5) + 1) / 5
+    const scoreCoeff = (Math.floor((redTimer / RED_DURATION) * RED_SCORE_STEPS) + 1) / RED_SCORE_STEPS
     addScore(Math.max(2, Math.floor(redCombo * scoreCoeff)) * chosenBonus(RED), RED)
     redTimer = RED_DURATION
   }
