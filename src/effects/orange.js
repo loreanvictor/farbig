@@ -25,7 +25,7 @@ export const addOrangeEffect = (engine, config) => {
       })
 
       const converted = []
-      const chance = Math.min(touched.length * 5, 85)
+      const chance = Math.min(touched.length * 6, 85)
 
       touched.forEach(box => {
         unfreeze(box)
@@ -39,7 +39,7 @@ export const addOrangeEffect = (engine, config) => {
       for (let i = 0; i < sorted.length; i++) {
         await sleep(40)
         changeColor(sorted[i], ORANGE)
-        addScore(converted.length * converted.length * chosenBonus(ORANGE), ORANGE)
+        addScore(converted.length * converted.length * chosenBonus(ORANGE) * chosenBonus(ORANGE), ORANGE)
       }
     }
   })
