@@ -15,7 +15,7 @@ export const addRedEffect = (_, config) => {
   const RED_SCORE_STEPS = 5
 
   const activateRed = (mul) => {
-    redCombo = Math.min(redCombo + Math.floor(Math.max(mul * mul, 8) * chosenBonus(RED)), MAX_RED)
+    redCombo = Math.min(redCombo + Math.floor(Math.max(mul * mul, 8) * chosenBonus(RED) * chosenBonus(RED)), MAX_RED)
     const redInd = document.getElementById('red')
     redInd.style.transition = 'none'
     redInd.style.transform = 'scaleX(1)'
