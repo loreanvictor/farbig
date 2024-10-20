@@ -42,7 +42,7 @@ export const addPurpleEffect = (engine, config) => {
     purpleInd.style.transform = 'scaleX(0)'
   }
 
-  listen('create:box', ({ box }) => {
+  listen('box:created', ({ box }) => {
     if (turnedPurple > 0) {
       if (random(0, 100) < REPURPLE_CHANCE) {
         changeColor(box, PURPLE)
@@ -52,7 +52,7 @@ export const addPurpleEffect = (engine, config) => {
     }
   })
 
-  listen('pop:group', ({ group, tapped }) => {
+  listen('group:popped', ({ group, tapped }) => {
     if (group[0].tag === PURPLE) {
       powerPurple(group.length)
     } else if (tapped) {

@@ -1,6 +1,8 @@
-import { listen, dispatch } from './dispatch.js'
+import { defineEvents, listen, dispatch } from './dispatch.js'
 import { BOX_CONFIG } from './box/box.js'
-import { GRAY } from './box/colors.js'
+
+
+defineEvents('group:matched')
 
 
 export const findMatchesOf = (boxes, startBox, maxvel = undefined) => {
@@ -56,11 +58,11 @@ export const findMatches = (boxes, minmatch, maxvel = undefined) => {
 }
 
 export const addMatchOnTap = (engine) => {
-  listen('tap:box', tapped => {
+  listen('box:tapped', tapped => {
     const boxes = Matter.Composite.allBodies(engine.world).filter(b => b.kind === 'box')
     const group = findMatchesOf(boxes, tapped[0])
 
-    dispatch('match', { group, tapped: true })
+    dispatch('group:matched', { group, tapped: true })
   })
 }
 
@@ -68,6 +70,6 @@ export const addAutoMatch = (engine, minmatch, maxvel) => {
   setInterval(() => {
     const boxes = Matter.Composite.allBodies(engine.world).filter(b => b.kind === 'box')
     const matches = findMatches(boxes, minmatch, maxvel)
-    matches.forEach(match => dispatch('match', { group: match, tapped: false }))
+    matches.forEach(match => dispatch('group:matched', { group: match, tapped: false }))
   }, 200)
 }

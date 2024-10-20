@@ -1,7 +1,10 @@
 import comma from 'https://esm.sh/v135/comma-number@2.1.0/es2022/comma-number.mjs'
 
-import { dispatch } from './dispatch.js'
+import { defineEvents, dispatch } from './dispatch.js'
 import { seed } from './random.js'
+
+
+defineEvents('score:added')
 
 
 const dayRecordKey = `highScore-${seed}`
@@ -73,7 +76,7 @@ export function addScore(added, color) {
   score += added
   updateScore()
 
-  dispatch('score:add', { added, score, color })
+  dispatch('score:added', { added, score, color })
 
   if(added > 10) {
     cueCombo(added)

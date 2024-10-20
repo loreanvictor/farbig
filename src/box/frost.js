@@ -1,6 +1,11 @@
-import { dispatch } from '../dispatch.js'
+import { defineEvents, dispatch } from '../dispatch.js'
 import { BLUE, ORANGE, GRAY, changeColor } from './colors.js'
 
+
+defineEvents(
+  'box:freezed',
+  'box:unfreezed',
+)
 
 export function freeze(box, time) {
   if (time < 100) {
@@ -18,7 +23,7 @@ export function freeze(box, time) {
   box.plugin.frost = Math.min(box.plugin.frost + time, 7000)
   box.render.lineWidth = box.plugin.frost / 250
 
-  dispatch('freeze:box', { box, refreeze })
+  dispatch('box:freezed', { box, refreeze })
 
   if (!box.plugin.unfreezeInterval) {
     box.plugin.unfreezeInterval = setInterval(() => {
@@ -39,7 +44,7 @@ export function isFrozen(box) {
 
 export function unfreeze(box) {
   if (isFrozen(box)) {
-    dispatch('unfreeze:box', { box })
+    dispatch('box:unfreezed', { box })
   }
 
   Matter.Body.setStatic(box, false)

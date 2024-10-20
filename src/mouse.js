@@ -1,4 +1,11 @@
-import { dispatch } from './dispatch.js'
+import { defineEvents, dispatch } from './dispatch.js'
+
+
+defineEvents(
+  'cursor:hold',
+  'box:touched',
+  'box:tapped'
+)
 
 
 const addBoxTouchListener = (mouse, engine) => {
@@ -7,7 +14,7 @@ const addBoxTouchListener = (mouse, engine) => {
       if (engine.gravity.scale > 0) {
         event.body.plugin.touched = true
       }
-      dispatch('touch:box', event.body)
+      dispatch('box:touched', event.body)
     }
   })
 
@@ -33,7 +40,7 @@ const addBoxTapListener = (mouse, engine) => {
         const boxes = Matter.Composite.allBodies(engine.world).filter(b => b.kind === 'box')
         const targets = Matter.Query.point(boxes, event.mouse.position)
         if (targets.length > 0) {
-          dispatch('tap:box', targets)
+          dispatch('box:tapped', targets)
         }
       }
     }
@@ -55,7 +62,7 @@ const addHoldListener = (mouse) => {
   })
 
   setInterval(() => {
-    holding && dispatch('hold', holdpos)
+    holding && dispatch('cursor:hold', holdpos)
   }, 1000 / 60)
 }
 

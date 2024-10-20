@@ -153,11 +153,10 @@
       addMatchOnTap(engine)
       addAutoMatch(engine, CONFIG.MIN_MATCH, CONFIG.MAX_VEL)
       addPopOnMatch(engine, boxes, CONFIG.MIN_MATCH)
-      // addScoreOnPop(CONFIG.MIN_MATCH)
       addExplodeOnPop(engine)
       addColorEffects(engine, CONFIG)
 
-      listen('game-over', () => showMenu())
+      listen('game:over', () => showMenu())
 
       Matter.Runner.run(engine)
       Matter.Render.run(render)

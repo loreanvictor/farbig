@@ -10,7 +10,7 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 export const addOrangeEffect = (engine, config) => {
   addScoreOnPop(ORANGE, matchScore(config.MIN_MATCH))
 
-  listen('pop:group', async ({ group }) => {
+  listen('group:popped', async ({ group }) => {
     if (group[0].tag === ORANGE) {
       const boxes = Matter.Composite.allBodies(engine.world).filter(b => b.kind === 'box')
       const maxdist = BOX_CONFIG.SIZE * 1.5
@@ -39,7 +39,7 @@ export const addOrangeEffect = (engine, config) => {
       for (let i = 0; i < sorted.length; i++) {
         await sleep(40)
         changeColor(sorted[i], ORANGE)
-        addScore(converted.length * converted.length * chosenBonus(ORANGE) * chosenBonus(ORANGE), ORANGE)
+        addScore(converted.length * converted.length * chosenBonus(ORANGE) * chosenBonus(ORANGE) * 2, ORANGE)
       }
     }
   })

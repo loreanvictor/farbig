@@ -18,7 +18,7 @@ export const addBlueEffect = (engine, config) => {
     })
   }
 
-  listen('pop:box', ({ box, group }) => {
+  listen('box:popped', ({ box, group }) => {
     if (box.tag === BLUE) {
       freezables(box).forEach(b => {
         freeze(b, 2500 * group.length)
@@ -26,7 +26,7 @@ export const addBlueEffect = (engine, config) => {
     }
   })
 
-  listen('pop:group', ({ group }) => {
+  listen('group:popped', ({ group }) => {
     if (group.some(box => isFrozen(box))) {
       addScore(group.length * group.length * chosenBonus(BLUE), BLUE)
     }
@@ -34,7 +34,7 @@ export const addBlueEffect = (engine, config) => {
 
   const FROST_SPREAD_FALLOFF = CHOSEN_COLOR === BLUE ? .95 : .45
 
-  listen('freeze:box', ({ box, refreeze }) => {
+  listen('box:freezed', ({ box, refreeze }) => {
     if (!refreeze) {
       setTimeout(() => {
         freezables(box).forEach(b => {

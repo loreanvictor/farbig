@@ -1,8 +1,14 @@
-import { listen, dispatch } from '../dispatch.js'
+import { listen, dispatch, defineEvents } from '../dispatch.js'
 import { addScore } from '../score.js'
 import { GRAY } from '../box/index.js'
 import { CHOSEN_COLOR, addScoreOnPop, matchScore, chosenBonus } from './common.js'
 
+
+defineEvents(
+  'gravity:turned-on',
+  'gravity:turned-off',
+  'gravity:off-tick',
+)
 
 export const GRAY_SCORE = 10
 export const MAX_GRAV_COUNTER = 12
@@ -12,13 +18,13 @@ const isGravityOff = engine => engine.gravity.scale === 0
 const addZeroGAttractEffect = engine => {
   let attractColor = undefined
 
-  listen('touch:box', box => {
+  listen('box:touched', box => {
     if (isGravityOff(engine)) {
       attractColor = box.tag
     }
   })
 
-  listen('hold', pos => {
+  listen('cursor:hold', pos => {
     const boxes = Matter.Composite.allBodies(engine.world).filter(b => b.kind === 'box')
     if (isGravityOff(engine)) {
       boxes.forEach(box => {
@@ -35,27 +41,37 @@ const addZeroGAttractEffect = engine => {
     }
   })
 
-  listen('gravity:on', () => attractColor = undefined)
+  listen('gravity:turned-on', () => attractColor = undefined)
 }
 
 const addZeroGBonus = engine => {
   let vaccumCombo = 0
   let lastRun = 0
+  let gravOff = false
+  let gravOffTime = 0
 
-  listen('gravity:on', () => {
-    vaccumCombo = Math.sqrt(vaccumCombo * vaccumCombo + lastRun * lastRun)
+  listen('gravity:turned-off', () => {
     lastRun = 0
+    gravOff = true
   })
 
-  listen('score:add', ({ added, color }) => {
-    if (color !== GRAY) {
-      lastRun += added
+  listen('gravity:off-tick', ({ time }) => gravOffTime = time)
+
+  listen('score:added', ({ added, color }) => {
+    if (gravOff && color !== GRAY) {
+      const timecoeff = Math.min(1, Math.log10(1 + 9 * (gravOffTime / 1000)))
+      lastRun += added * timecoeff
     }
   })
 
-  listen('pop:group', ({ group }) => {
+  listen('gravity:turned-on', () => {
+    gravOff = false
+    vaccumCombo = Math.sqrt(vaccumCombo * vaccumCombo + lastRun * lastRun)
+  })
+
+  listen('group:popped', ({ group }) => {
     if (group[0].tag === GRAY) {
-      addScore(Math.floor(group.length * vaccumCombo / 96) * chosenBonus(GRAY), GRAY)
+      addScore(Math.floor(group.length * vaccumCombo / 16) * chosenBonus(GRAY), GRAY)
     }
   })
 }
@@ -79,7 +95,7 @@ export const addGrayEffect = (engine, config) => {
 
     engine.gravity.scale = 0
 
-    dispatch('gravity:off', {
+    dispatch('gravity:turned-off', {
       time: antiGravCounter * gravCounterStep,
       extended,
     })
@@ -90,15 +106,17 @@ export const addGrayEffect = (engine, config) => {
           engine.gravity.scale = 0
           antiGravCounter--
           indicator.style.transform = `scaleX(${antiGravCounter / (MAX_GRAV_COUNTER * mult)})`
+
+          dispatch('gravity:off-tick', { time: antiGravCounter * gravCounterStep })
         } else {
           engine.gravity.scale = DEFAULT_GRAVITY
-          dispatch('gravity:on')
+          dispatch('gravity:turned-on')
         }
       }, gravCounterStep)
     }
   }
 
-  listen('pop:box', ({ box, group }) => {
+  listen('box:popped', ({ box, group }) => {
     if (box.tag === GRAY) {
       turnGravityOff(group.length)
     }

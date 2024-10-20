@@ -26,7 +26,7 @@ export const matchScore = (minmatch, base = BASE_SCORE) => (count, color) => {
 
 
 export const addScoreOnPop = (color, calc) => {
-  listen('pop:group', ({ group }) => {
+  listen('group:popped', ({ group }) => {
     if (group[0].tag === color) {
       addScore(calc(group.length, color), color)
     }

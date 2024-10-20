@@ -7,7 +7,7 @@ import { CHOSEN_COLOR, addScoreOnPop, matchScore } from './common.js'
 export const addWhiteEffect = (engine, config) => {
   addScoreOnPop(WHITE, matchScore(config.MIN_MATCH))
 
-  listen('pop:group', ({ group }) => {
+  listen('group:popped', ({ group }) => {
     if (group[0].tag === WHITE) {
       const boxes = Matter.Composite.allBodies(engine.world).filter(b => b.kind === 'box')
       const all = [RED, BLUE, GREEN, PURPLE, GRAY, ORANGE]

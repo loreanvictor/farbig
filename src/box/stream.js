@@ -1,7 +1,10 @@
 import { random } from '../random.js'
-import { listen, dispatch } from '../dispatch.js'
+import { listen, dispatch, defineEvents } from '../dispatch.js'
 import { COLORS } from './colors.js'
 import { createBox, BOX_CONFIG } from './box.js'
+
+
+defineEvents('box:created')
 
 
 export const createBoxStream = (engine, config) => {
@@ -37,7 +40,7 @@ export const createBoxStream = (engine, config) => {
       const color = colorArray[colorIndex]
       const box = createBox(x, y, color)
       Matter.Composite.add(boxes, box)
-      dispatch('create:box', { box, row: i, column: j })
+      dispatch('box:created', { box, row: i, column: j })
 
       colorIndex++
     }
@@ -75,7 +78,7 @@ const attachStreamIndicator = (total) => {
     document.getElementById('box-count-indicator').style.transform = `scaleY(${allBoxes / total})`
   }
 
-  listen('pop:group', ({ group }) => {
+  listen('group:popped', ({ group }) => {
     allBoxes -= group.length
     updateBoxCountIndicator()
   })

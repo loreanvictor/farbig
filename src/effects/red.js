@@ -38,7 +38,7 @@ export const addRedEffect = (_, config) => {
     }
   }, 10)
 
-  listen('pop:box', ({ box, group }) => {
+  listen('box:popped', ({ box, group }) => {
     if (box.tag === RED) {
       activateRed(group.length)
     }

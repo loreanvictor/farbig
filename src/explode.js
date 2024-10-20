@@ -27,7 +27,7 @@ export function explode(engine, box) {
 }
 
 export const addExplodeOnPop = engine => {
-  listen('pop:box', ({ box, tapped }) => {
+  listen('box:popped', ({ box, tapped }) => {
     explode(engine, box, tapped)
   })
 }
