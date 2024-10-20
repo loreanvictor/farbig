@@ -45,6 +45,8 @@ const addZeroGAttractEffect = engine => {
 }
 
 const addZeroGBonus = engine => {
+  const minGravTime = 1000
+
   let vaccumCombo = 0
   let lastRun = 0
   let gravOff = false
@@ -59,7 +61,7 @@ const addZeroGBonus = engine => {
 
   listen('score:added', ({ added, color }) => {
     if (gravOff && color !== GRAY) {
-      const timecoeff = Math.min(1, Math.log10(1 + 9 * (gravOffTime / 1000)))
+      const timecoeff = Math.min(1, 1 / (1 + Math.exp(-10 * (gravOffTime / minGravTime - 0.75))))
       lastRun += added * timecoeff
     }
   })
@@ -71,7 +73,7 @@ const addZeroGBonus = engine => {
 
   listen('group:popped', ({ group }) => {
     if (group[0].tag === GRAY) {
-      addScore(Math.floor(group.length * vaccumCombo / 16) * chosenBonus(GRAY), GRAY)
+      addScore(Math.floor(group.length * vaccumCombo / 64) * chosenBonus(GRAY), GRAY)
     }
   })
 }
