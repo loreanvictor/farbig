@@ -12,7 +12,7 @@ export const addRedEffect = (_, config) => {
 
   const MAX_RED = 8192
   const RED_DURATION = 3750
-  const RED_SCORE_STEPS = 5
+  const RED_SCORE_STEPS = 7
 
   const activateRed = (mul) => {
     redCombo = Math.min(redCombo + Math.floor(Math.max(mul * mul, 8) * chosenBonus(RED) * chosenBonus(RED)), MAX_RED)
@@ -25,7 +25,7 @@ export const addRedEffect = (_, config) => {
     }, 50)
 
     const scoreCoeff = (Math.floor((redTimer / RED_DURATION) * RED_SCORE_STEPS) + 1) / RED_SCORE_STEPS
-    addScore(Math.max(2, Math.floor(redCombo * scoreCoeff)), RED)
+    addScore(Math.max(2, Math.floor(redCombo * scoreCoeff * 1.5)), RED)
     redTimer = RED_DURATION
   }
 
