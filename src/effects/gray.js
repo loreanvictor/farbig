@@ -73,7 +73,7 @@ const addZeroGBonus = engine => {
 
   listen('group:popped', ({ group }) => {
     if (group[0].tag === GRAY) {
-      addScore(Math.floor(group.length * vaccumCombo / 64) * chosenBonus(GRAY), GRAY)
+      addScore(Math.floor(group.length * vaccumCombo / 128) * chosenBonus(GRAY), GRAY)
     }
   })
 }
