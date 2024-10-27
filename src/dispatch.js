@@ -1,11 +1,31 @@
 const DEFINED = []
 
+/**
+ * utilities for dispatching and listening to global events.
+ */
 
+/**
+ * 
+ * define a set of event names as valid global events.
+ * events that are dispatched or listened to will be checked against
+ * this name to more easily debug errors relating to event names.
+ * 
+ * @param {string[]} names
+ */
 export const defineEvents = (...names) => {
   names.forEach(name => DEFINED.push(name))
 }
 
 
+/**
+ * 
+ * dispatch a global given event with given details, notifying
+ * all listeners of that event.
+ * 
+ * @param {string} name 
+ * @param {object} details 
+ * @throws if the event name is not defined
+ */
 export const dispatch = (name, details) => {
   if (!DEFINED.includes(name)) {
     throw new Error(`Can't dispatch undefined event: ${name}`)
@@ -16,6 +36,16 @@ export const dispatch = (name, details) => {
 }
 
 
+/**
+ * 
+ * listen to a given global event, calling the given callback
+ * whenever the event is dispatched.
+ * 
+ * @param {string} name 
+ * @param {(details: object) => any} callback
+ * @returns a callback to remove the listener
+ * @throws if the event name is not defined.
+ */
 export const listen = (name, callback) => {
   if (!DEFINED.includes(name)) {
     throw new Error(`Can't listen to undefined event: ${name}`)

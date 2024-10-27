@@ -27,9 +27,8 @@ export const addBlueEffect = (engine, config) => {
   })
 
   listen('group:popped', ({ group }) => {
-    if (group.some(box => isFrozen(box))) {
-      addScore(group.length * group.length * chosenBonus(BLUE), BLUE)
-    }
+    const frozen = group.filter(b => isFrozen(b)).length
+    addScore(frozen.length * frozen.length * frozen.length * chosenBonus(BLUE), BLUE)
   })
 
   const FROST_SPREAD_FALLOFF = CHOSEN_COLOR === BLUE ? .95 : .45
