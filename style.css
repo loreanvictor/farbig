@@ -233,7 +233,6 @@ button {
 
     &#white {
       background: var(--white);
-      transition: transform 50ms;
     }
   }
 }

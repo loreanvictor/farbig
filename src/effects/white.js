@@ -19,21 +19,39 @@ const addDiscoBonus = () => {
   let discoTime = 0
   let colors = []
   let bonusBase = 0
+  let interval = undefined
 
   const discoInd = document.getElementById('white')
   const updateIndicator = () => discoInd.style.transform = `scaleX(${discoTime / DISCO_TIME})`
 
   listen('group:color-changed', ({ group }) => {
+    clearInterval(interval)
+    discoInd.style.background = WHITE
     discoTime = DISCO_TIME
     colors = []
     bonusBase = group.length
 
     updateIndicator()
     dispatch('white:disco-time-started', { time: discoTime })
+
+    interval = setInterval(() => {
+      if (discoTime > 0) {
+        discoTime = Math.max(0, discoTime - 250)
+        updateIndicator()
+  
+        if (discoTime > 0) {
+          dispatch('white:disco-time-tick', { time: discoTime })
+        } else {
+          dispatch('white:disco-time-ended')
+          clearInterval(interval)
+        }
+      }
+    }, 250)
   })
 
   listen('box:popped', ({ box }) => {
     if (discoTime > 0 && !colors.includes(box.tag)) {
+      discoInd.style.background = box.tag
       colors.push(box.tag)
     }
   })
@@ -41,19 +59,6 @@ const addDiscoBonus = () => {
   listen('white:disco-time-ended', () => {
     addScore(Math.pow(bonusBase, colors.length) * chosenBonus(WHITE), WHITE)
   })
-
-  setInterval(() => {
-    if (discoTime > 0) {
-      discoTime = Math.max(0, discoTime - 50)
-      updateIndicator()
-
-      if (discoTime > 0) {
-        dispatch('white:disco-time-tick', { time: discoTime })
-      } else {
-        dispatch('white:disco-time-ended')
-      }
-    }
-  }, 50)
 }
 
 
@@ -97,7 +102,7 @@ export const addWhiteEffect = (engine, config) => {
           changeColor(box, color)
       })
 
-      dispatch('group:color-changed', { group })
+      dispatch('group:color-changed', { group: toBeChanged })
     }
   })
 }
