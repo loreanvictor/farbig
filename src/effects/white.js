@@ -39,7 +39,6 @@ const addDiscoBonus = () => {
   })
 
   listen('white:disco-time-ended', () => {
-    console.log(bonusBase, colors.length)
     addScore(Math.pow(bonusBase, colors.length) * chosenBonus(WHITE), WHITE)
   })
 
