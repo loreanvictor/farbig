@@ -230,6 +230,11 @@ button {
       background: var(--purple);
       transition: transform .2s;
     }
+
+    &#white {
+      background: var(--white);
+      transition: transform 50ms;
+    }
   }
 }
 

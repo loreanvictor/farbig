@@ -11,7 +11,7 @@ export const addRedEffect = (_, config) => {
   let redCombo = 0
 
   const MAX_RED = 8192
-  const RED_DURATION = 3750
+  const RED_DURATION = 3500
   const RED_SCORE_STEPS = 7
 
   const activateRed = (mul) => {

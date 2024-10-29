@@ -1,5 +1,7 @@
 import Color from 'https://esm.sh/v135/color@4.2.3/es2022/color.mjs'
 
+import { defineEvents, dispatch } from '../dispatch.js'
+
 export const ORANGE = '#efa73e'
 export const RED = '#bb2757'
 export const BLUE = '#4974be'
@@ -10,7 +12,10 @@ export const GRAY = '#325379'
 
 export const COLORS = [ORANGE, RED, BLUE, GREEN, PURPLE, WHITE, GRAY]
 
+defineEvents('box:color-changed')
+
 export const changeColor = (box, color) => {
+  const from = box.tag
   box.tag = color
   box.plugin.touched = false
   if (!(box.plugin.frost > 0)) {
@@ -34,6 +39,8 @@ export const changeColor = (box, color) => {
         clearInterval(box.plugin.conversionInterval)
         box.plugin.conversionInterval = undefined
         box.render.fillStyle = box.tag
+
+        dispatch('box:color-changed', { box, from, to: box.tag })
       } else {
         box.render.fillStyle = current.mix(target, 0.3).hex()
       }

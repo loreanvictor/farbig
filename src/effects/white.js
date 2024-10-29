@@ -1,11 +1,66 @@
-import { listen } from '../dispatch.js'
+import { listen, defineEvents, dispatch } from '../dispatch.js'
 import { random } from '../random.js'
 import { BOX_CONFIG, WHITE, RED, BLUE, GREEN, PURPLE, GRAY, ORANGE, changeColor } from '../box/index.js'
-import { CHOSEN_COLOR, addScoreOnPop, matchScore } from './common.js'
+import { CHOSEN_COLOR, addScoreOnPop, matchScore, chosenBonus } from './common.js'
+import { addScore } from '../score.js'
+
+
+defineEvents(
+  'group:color-changed',
+  'white:disco-time-started',
+  'white:disco-time-tick',
+  'white:disco-time-ended',
+)
+
+
+const addDiscoBonus = () => {
+  const DISCO_TIME = 1500
+
+  let discoTime = 0
+  let colors = []
+  let bonusBase = 0
+
+  const discoInd = document.getElementById('white')
+  const updateIndicator = () => discoInd.style.transform = `scaleX(${discoTime / DISCO_TIME})`
+
+  listen('group:color-changed', ({ group }) => {
+    discoTime = DISCO_TIME
+    colors = []
+    bonusBase = group.length
+
+    updateIndicator()
+    dispatch('white:disco-time-started', { time: discoTime })
+  })
+
+  listen('box:popped', ({ box }) => {
+    if (discoTime > 0 && !colors.includes(box.tag)) {
+      colors.push(box.tag)
+    }
+  })
+
+  listen('white:disco-time-ended', () => {
+    console.log(bonusBase, colors.length)
+    addScore(Math.pow(bonusBase, colors.length) * chosenBonus(WHITE), WHITE)
+  })
+
+  setInterval(() => {
+    if (discoTime > 0) {
+      discoTime = Math.max(0, discoTime - 50)
+      updateIndicator()
+
+      if (discoTime > 0) {
+        dispatch('white:disco-time-tick', { time: discoTime })
+      } else {
+        dispatch('white:disco-time-ended')
+      }
+    }
+  }, 50)
+}
 
 
 export const addWhiteEffect = (engine, config) => {
   addScoreOnPop(WHITE, matchScore(config.MIN_MATCH))
+  addDiscoBonus()
 
   listen('group:popped', ({ group }) => {
     if (group[0].tag === WHITE) {
@@ -42,6 +97,8 @@ export const addWhiteEffect = (engine, config) => {
           const color = colors[random(0, colors.length - 1)]
           changeColor(box, color)
       })
+
+      dispatch('group:color-changed', { group })
     }
   })
 }
