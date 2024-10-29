@@ -51,9 +51,11 @@ const addZeroGBonus = engine => {
   let lastRun = 0
   let gravOff = false
   let gravOffTime = 0
+  let colors = []
 
   listen('gravity:turned-off', () => {
     lastRun = 0
+    colors = []
     gravOff = true
   })
 
@@ -63,12 +65,15 @@ const addZeroGBonus = engine => {
     if (gravOff && color !== GRAY) {
       const timecoeff = Math.min(1, 1 / (1 + Math.exp(-10 * (gravOffTime / minGravTime - 0.75))))
       lastRun += added * timecoeff
+      if (!colors.includes(color)) {
+        colors.push(color)
+      }
     }
   })
 
   listen('gravity:turned-on', () => {
     gravOff = false
-    vaccumCombo = Math.sqrt(vaccumCombo * vaccumCombo + lastRun * lastRun)
+    vaccumCombo = Math.sqrt(vaccumCombo * vaccumCombo + lastRun * lastRun * colors.length)
   })
 
   listen('group:popped', ({ group }) => {

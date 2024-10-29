@@ -17,6 +17,10 @@ export const createWalls = (engine, config) => {
     config.width - WALL_CONFIG.MARGIN + WALL_CONFIG.THICKNESS / 2, 0, 
     WALL_CONFIG.THICKNESS, WALL_CONFIG.THICKNESS, wallOptions
   )
+  const ceiling = Matter.Bodies.rectangle(
+    0, -WALL_CONFIG.THICKNESS, 
+    WALL_CONFIG.THICKNESS, WALL_CONFIG.THICKNESS, wallOptions
+  )
   
-  Matter.World.add(engine.world, [ground, leftWall, rightWall])
+  Matter.World.add(engine.world, [ground, leftWall, rightWall, ceiling])
 }
