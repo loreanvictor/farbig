@@ -14,7 +14,7 @@ defineEvents(
 
 
 const addDiscoBonus = () => {
-  const DISCO_TIME = 1500
+  const DISCO_TIME = 2000
 
   let discoTime = 0
   let colors = []
