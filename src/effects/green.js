@@ -1,9 +1,9 @@
-import { addScoreOnPop, CHOSEN_COLOR, BASE_SCORE } from './common.js'
+import { addScoreOnPop, isChosen, BASE_SCORE } from './common.js'
 import { GREEN } from '../box/index.js'
 
 
 export const addGreenEffect = () => {
-  const score = CHOSEN_COLOR === GREEN ? BASE_SCORE * 2 : BASE_SCORE
+  const score = isChosen(GREEN) ? BASE_SCORE * 2 : BASE_SCORE
 
   addScoreOnPop(GREEN, (count) =>
     Math.max(

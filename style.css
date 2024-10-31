@@ -80,6 +80,10 @@ button {
   overflow: hidden;
 }
 
+#chosen {
+  transition: background-color 1s;
+}
+
 #box-count {
   --width: calc(3 * var(--effects-bar-thickness));
 

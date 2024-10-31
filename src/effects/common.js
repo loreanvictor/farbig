@@ -1,22 +1,34 @@
-import { listen } from '../dispatch.js'
+import { listen, dispatch, defineEvents } from '../dispatch.js'
 import { COLORS } from '../box/index.js'
 import { addScore } from '../score.js'
 
 
-export const CHOSEN_COLOR = COLORS[
+defineEvents('chosen-color:changed')
+
+let chosenOffset = 0
+const choose = () => COLORS[
   (
-    Math.floor(new Date().getTime() / (1000 * 60 * 60))
+    (Math.floor(new Date().getTime() / (1000 * 60 * 60))) + chosenOffset
   ) % COLORS.length
 ]
 
-document.getElementById('chosen').style.backgroundColor = CHOSEN_COLOR
+let chosenColor = choose()
+const render = () => document.getElementById('chosen').style.backgroundColor = chosenColor
+render()
 
+export const nextChosenColor = () => {
+  const prev = chosenColor
+  chosenOffset++
+  chosenColor = choose()
+
+  render()
+  dispatch('chosen-color:changed', { prev, offset: chosenOffset, color: chosenColor })
+}
 
 export const BASE_SCORE = 10
 
-
-export const chosenBonus = color => color === CHOSEN_COLOR ? 2 : 1
-
+export const isChosen = (color) => color === chosenColor
+export const chosenBonus = color => isChosen(color) ? 2 : 1
 
 export const matchScore = (minmatch, base = BASE_SCORE) => (count, color) => {
   const M = count - minmatch + 1

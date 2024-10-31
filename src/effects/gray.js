@@ -1,7 +1,7 @@
 import { listen, dispatch, defineEvents } from '../dispatch.js'
 import { addScore } from '../score.js'
 import { GRAY } from '../box/index.js'
-import { CHOSEN_COLOR, addScoreOnPop, matchScore, chosenBonus } from './common.js'
+import { isChosen, addScoreOnPop, matchScore, chosenBonus } from './common.js'
 
 
 defineEvents(
@@ -95,7 +95,7 @@ export const addGrayEffect = (engine, config) => {
   let gravRunner
   
   const turnGravityOff = (mul = 1) => {
-    const mult = CHOSEN_COLOR === GRAY ? 2 : 1
+    const mult = isChosen(GRAY) ? 2 : 1
     antiGravCounter = Math.min(MAX_GRAV_COUNTER, antiGravCounter + mul) * mult
     const gravCounterStep = 300
     const extended = isGravityOff(engine)

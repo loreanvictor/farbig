@@ -1,7 +1,7 @@
 import { listen } from '../dispatch.js'
 import { addScore } from '../score.js'
 import { BLUE, BOX_CONFIG, freeze, isFrozen } from '../box/index.js'
-import { CHOSEN_COLOR, addScoreOnPop, matchScore, chosenBonus } from './common.js'
+import { isChosen, addScoreOnPop, matchScore, chosenBonus } from './common.js'
 
 
 const BLUE_SCORE = 100
@@ -31,7 +31,7 @@ export const addBlueEffect = (engine, config) => {
     addScore(Math.floor(frozen * frozen * frozen / 2.3 * chosenBonus(BLUE)), BLUE)
   })
 
-  const FROST_SPREAD_FALLOFF = CHOSEN_COLOR === BLUE ? .95 : .45
+  const FROST_SPREAD_FALLOFF = isChosen(BLUE) ? .95 : .45
 
   listen('box:freezed', ({ box, refreeze }) => {
     if (!refreeze) {

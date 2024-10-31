@@ -1,7 +1,7 @@
 import { listen, defineEvents, dispatch } from '../dispatch.js'
 import { random } from '../random.js'
 import { BOX_CONFIG, WHITE, RED, BLUE, GREEN, PURPLE, GRAY, ORANGE, changeColor } from '../box/index.js'
-import { CHOSEN_COLOR, addScoreOnPop, matchScore, chosenBonus } from './common.js'
+import { isChosen, addScoreOnPop, matchScore, nextChosenColor } from './common.js'
 import { addScore } from '../score.js'
 
 
@@ -12,10 +12,9 @@ defineEvents(
   'white:disco-time-ended',
 )
 
+const DISCO_TIME = 1500
 
 const addDiscoBonus = () => {
-  const DISCO_TIME = 1500
-
   let discoTime = 0
   let colors = []
   let bonusBase = 0
@@ -28,7 +27,6 @@ const addDiscoBonus = () => {
     clearInterval(interval)
     discoInd.style.background = WHITE
     discoTime = DISCO_TIME
-    colors = []
     bonusBase = group.length
 
     updateIndicator()
@@ -49,16 +47,46 @@ const addDiscoBonus = () => {
     }, 250)
   })
 
+  let discoReset = undefined
   listen('box:popped', ({ box }) => {
-    if (discoTime > 0 && !colors.includes(box.tag)) {
+    if (discoTime > 0) {
+      discoInd.style.transition = 'none'
       discoInd.style.background = box.tag
-      colors.push(box.tag)
+
+      clearTimeout(discoReset)
+      discoReset = setTimeout(() => {
+        discoInd.style.transition = 'background .7s'
+        discoInd.style.background = WHITE
+      }, 200)
+
+      if (!colors.includes(box.tag)) {
+        colors.push(box.tag) 
+      }
     }
   })
 
   listen('white:disco-time-ended', () => {
     const score = bonusBase * bonusBase * colors.length * colors.length * colors.length
+    colors = []
     addScore(score, WHITE)
+  })
+}
+
+
+const addChosenSwitch = () => {
+  let count = 1
+  let timer = undefined
+
+  listen('group:popped', ({ group }) => {
+    if (group[0].tag === WHITE) {
+      clearTimeout(timer)
+      timer = setTimeout(() => count = 1, DISCO_TIME)
+
+      count++
+      if (count > 3) {
+        nextChosenColor()
+      }
+    }
   })
 }
 
@@ -66,12 +94,13 @@ const addDiscoBonus = () => {
 export const addWhiteEffect = (engine, config) => {
   addScoreOnPop(WHITE, matchScore(config.MIN_MATCH))
   addDiscoBonus()
+  addChosenSwitch()
 
   listen('group:popped', ({ group }) => {
     if (group[0].tag === WHITE) {
       const boxes = Matter.Composite.allBodies(engine.world).filter(b => b.kind === 'box')
       const all = [RED, BLUE, GREEN, PURPLE, GRAY, ORANGE]
-      const mult = CHOSEN_COLOR === WHITE ? 2 : 1
+      const mult =  isChosen(WHITE) ? 2 : 1
       const gmult = Math.max(Math.floor(Math.log(group.length * 1.7) / Math.log(2)), 1)
 
       const toBeChanged = []
