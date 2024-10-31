@@ -14,7 +14,7 @@ defineEvents(
 
 
 const addDiscoBonus = () => {
-  const DISCO_TIME = 2000
+  const DISCO_TIME = 1500
 
   let discoTime = 0
   let colors = []
@@ -58,7 +58,7 @@ const addDiscoBonus = () => {
 
   listen('white:disco-time-ended', () => {
     const score = bonusBase * bonusBase * colors.length * colors.length * colors.length
-    addScore(score * chosenBonus(WHITE), WHITE)
+    addScore(score, WHITE)
   })
 }
 
