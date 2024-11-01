@@ -1,63 +1,48 @@
 import { listen, defineEvents, dispatch } from '../dispatch.js'
 import { random } from '../random.js'
 import { BOX_CONFIG, WHITE, RED, BLUE, GREEN, PURPLE, GRAY, ORANGE, changeColor } from '../box/index.js'
-import { isChosen, addScoreOnPop, matchScore, nextChosenColor } from './common.js'
 import { addScore } from '../score.js'
+import { isChosen, addScoreOnPop, matchScore, nextChosenColor } from './common.js'
+import { createTimer } from './util/timer.js'
 
 
-defineEvents(
-  'group:color-changed',
-  'white:disco-time-started',
-  'white:disco-time-tick',
-  'white:disco-time-ended',
-)
+defineEvents('white:color-changed')
 
 const DISCO_TIME = 1500
 
 const addDiscoBonus = () => {
-  let discoTime = 0
   let colors = []
   let bonusBase = 0
-  let interval = undefined
+
+  const timer = createTimer(250)
 
   const discoInd = document.getElementById('white')
-  const updateIndicator = () => discoInd.style.transform = `scaleX(${discoTime / DISCO_TIME})`
+  const updateIndicator = () => discoInd.style.transform = `scaleX(${timer.get() / DISCO_TIME})`
 
-  listen('group:color-changed', ({ group }) => {
-    clearInterval(interval)
+  listen('white:color-changed', ({ group }) => {
     discoInd.style.background = WHITE
-    discoTime = DISCO_TIME
+    timer.set(DISCO_TIME)
     bonusBase = group.length
 
     updateIndicator()
-    dispatch('white:disco-time-started', { time: discoTime })
-
-    interval = setInterval(() => {
-      if (discoTime > 0) {
-        discoTime = Math.max(0, discoTime - 250)
-        updateIndicator()
-  
-        if (discoTime > 0) {
-          dispatch('white:disco-time-tick', { time: discoTime })
-        } else {
-          dispatch('white:disco-time-ended')
-          clearInterval(interval)
-        }
-      }
-    }, 250)
   })
 
-  let discoReset = undefined
+  timer.listen(({ time }) => {
+    updateIndicator()
+    if (time === 0) {
+      const score = bonusBase * bonusBase * colors.length * colors.length * colors.length
+      colors = []
+      addScore(score, WHITE)
+    }
+  })
+
+  const reset = createTimer()
   listen('box:popped', ({ box }) => {
-    if (discoTime > 0) {
+    if (timer.get() > 0) {
       discoInd.style.transition = 'none'
       discoInd.style.background = box.tag
 
-      clearTimeout(discoReset)
-      discoReset = setTimeout(() => {
-        discoInd.style.transition = 'background .7s'
-        discoInd.style.background = WHITE
-      }, 200)
+      reset.set(200)
 
       if (!colors.includes(box.tag)) {
         colors.push(box.tag) 
@@ -65,10 +50,11 @@ const addDiscoBonus = () => {
     }
   })
 
-  listen('white:disco-time-ended', () => {
-    const score = bonusBase * bonusBase * colors.length * colors.length * colors.length
-    colors = []
-    addScore(score, WHITE)
+  reset.listen(({ time }) => {
+    if (time === 0) {
+      discoInd.style.transition = 'background .7s'
+      discoInd.style.background = WHITE
+    }
   })
 }
 
@@ -91,11 +77,7 @@ const addChosenSwitch = () => {
 }
 
 
-export const addWhiteEffect = (engine, config) => {
-  addScoreOnPop(WHITE, matchScore(config.MIN_MATCH))
-  addDiscoBonus()
-  addChosenSwitch()
-
+const addColorChangeEffect = (engine) => {
   listen('group:popped', ({ group }) => {
     if (group[0].tag === WHITE) {
       const boxes = Matter.Composite.allBodies(engine.world).filter(b => b.kind === 'box')
@@ -132,7 +114,15 @@ export const addWhiteEffect = (engine, config) => {
           changeColor(box, color)
       })
 
-      dispatch('group:color-changed', { group: toBeChanged })
+      dispatch('white:color-changed', { group: toBeChanged })
     }
   })
+}
+
+
+export const addWhiteEffect = (engine, config) => {
+  addScoreOnPop(WHITE, matchScore(config.MIN_MATCH))
+  addDiscoBonus()
+  addChosenSwitch()
+  addColorChangeEffect(engine)
 }

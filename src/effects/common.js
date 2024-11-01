@@ -25,17 +25,16 @@ export const nextChosenColor = () => {
   dispatch('chosen-color:changed', { prev, offset: chosenOffset, color: chosenColor })
 }
 
-export const BASE_SCORE = 10
-
 export const isChosen = (color) => color === chosenColor
 export const chosenBonus = color => isChosen(color) ? 2 : 1
+
+export const BASE_SCORE = 10
 
 export const matchScore = (minmatch, base = BASE_SCORE) => (count, color) => {
   const M = count - minmatch + 1
 
   return (M > 0 ? M * M * base : 1) * chosenBonus(color)
 }
-
 
 export const addScoreOnPop = (color, calc) => {
   listen('group:popped', ({ group }) => {

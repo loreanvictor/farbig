@@ -1,18 +1,18 @@
 import { addScore } from '../score.js'
 import { listen } from '../dispatch.js'
 import { RED } from '../box/index.js'
+import { createTimer } from './util/timer.js'
 import { addScoreOnPop, matchScore, chosenBonus } from './common.js'
 
 
-export const addRedEffect = (_, config) => {
-  addScoreOnPop(RED, matchScore(config.MIN_MATCH))
-
-  let redTimer
+const addRedTimerEffect = () => {
   let redCombo = 0
 
   const MAX_RED = 8192
   const RED_DURATION = 3500
   const RED_SCORE_STEPS = 7
+
+  const timer = createTimer()
 
   const activateRed = (mul) => {
     redCombo = Math.min(redCombo + Math.floor(Math.max(mul * mul, 8) * chosenBonus(RED) * chosenBonus(RED)), MAX_RED)
@@ -24,23 +24,22 @@ export const addRedEffect = (_, config) => {
       redInd.style.transform = 'scaleX(0)'
     }, 50)
 
-    const scoreCoeff = (Math.floor((redTimer / RED_DURATION) * RED_SCORE_STEPS) + 1) / RED_SCORE_STEPS
+    const scoreCoeff = (Math.floor((timer.get() / RED_DURATION) * RED_SCORE_STEPS) + 1) / RED_SCORE_STEPS
     addScore(Math.max(2, Math.floor(redCombo * scoreCoeff * 2)), RED)
-    redTimer = RED_DURATION
+    timer.set(RED_DURATION)
   }
 
-  setInterval(() => {
-    if (redTimer > 0) {
-      redTimer -= 10
-    } else {
-      redTimer = 0
-      redCombo = 0
-    }
-  }, 10)
+  timer.listen(({ time }) => time === 0 && (redCombo = 0))
 
   listen('box:popped', ({ box, group }) => {
     if (box.tag === RED) {
       activateRed(group.length)
     }
   })
+}
+
+
+export const addRedEffect = (_, config) => {
+  addScoreOnPop(RED, matchScore(config.MIN_MATCH))
+  addRedTimerEffect()
 }
