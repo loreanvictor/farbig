@@ -48,7 +48,7 @@ export const createIndicator = (options) => {
     return done()
   }
 
-  const burst = (val) => over(10).set(val)
+  const burst = (val) => over(10).set(val).wait(50)
 
   const then = (fn) => {
     const current = key

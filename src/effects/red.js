@@ -27,9 +27,9 @@ const addRedTimerEffect = () => {
 
   timer.listen(({ time }) => time === 0 && (redCombo = 0))
 
-  listen('box:popped', ({ box, group }) => {
-    if (box.tag === RED) {
-      activateRed(group.length)
+  listen('group:popped', ({ group }) => {
+    if (group[0].tag === RED) {
+      activateRed(group.length * group.length)
     }
   })
 }

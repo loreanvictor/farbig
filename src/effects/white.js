@@ -9,10 +9,10 @@ import { createIndicator } from './util/indicator.js'
 
 defineEvents('white:color-changed')
 
-const DISCO_TIME = 1500
+const DISCO_TIME = 1250
 
 const addDiscoBonus = () => {
-  let colors = []
+  let colorMap = {}
   let bonusBase = 0
 
   const timer = createTimer(250)
@@ -21,25 +21,26 @@ const addDiscoBonus = () => {
   listen('white:color-changed', ({ group }) => {
     indicator.take('background').set(WHITE).done()
     timer.set(DISCO_TIME)
-    bonusBase = group.length
+    bonusBase = Math.max(bonusBase, group.length)
   })
 
   timer.listen(({ time }) => {
     indicator.set(time)
     if (time === 0) {
-      const score = bonusBase * bonusBase * colors.length * colors.length * colors.length
-      colors = []
+      const count = Object.keys(colorMap).length
+      const bonus = Object.values(colorMap).reduce((total, each) => total + each * each, 0)
+      const score = Math.floor(bonusBase * bonus * bonus * count / 4)
+      colorMap = {}
       addScore(score, WHITE)
     }
   })
 
-  listen('box:popped', ({ box }) => {
+  listen('group:popped', ({ group }) => {
     if (timer.get() > 0) {
-      if (!colors.includes(box.tag)) {
-        colors.push(box.tag)
-      }
+      const color = group[0].tag
+      colorMap[color] = Math.max(colorMap[color] || 0, group.length)
 
-      indicator.take('background').burst(box.tag).wait(100).then(() => {
+      indicator.take('background').burst(color).wait(100).then(() => {
         indicator.over(500).set(WHITE)
       })
     }
@@ -49,12 +50,11 @@ const addDiscoBonus = () => {
 
 const addChosenSwitch = () => {
   let count = 1
-  let timer = undefined
+  const timer = createTimer()
 
   listen('group:popped', ({ group }) => {
     if (group[0].tag === WHITE) {
-      clearTimeout(timer)
-      timer = setTimeout(() => count = 1, DISCO_TIME)
+      timer.set(DISCO_TIME)
 
       count++
       if (count > 3) {
@@ -62,6 +62,8 @@ const addChosenSwitch = () => {
       }
     }
   })
+
+  timer.listen(({ time }) => time === 0 && (count = 1))
 }
 
 
