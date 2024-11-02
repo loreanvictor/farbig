@@ -25,7 +25,7 @@ const addDiscoBonus = () => {
   })
 
   timer.listen(({ time }) => {
-    indicator.set(timer.get())
+    indicator.set(time)
     if (time === 0) {
       const score = bonusBase * bonusBase * colors.length * colors.length * colors.length
       colors = []
