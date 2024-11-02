@@ -79,7 +79,7 @@ const addZeroGBonus = () => {
 
   listen('group:popped', ({ group }) => {
     if (group[0].tag === GRAY) {
-      addScore(Math.floor(group.length * vaccumCombo / 128) * chosenBonus(GRAY), GRAY)
+      addScore(Math.floor(group.length * vaccumCombo / 96) * chosenBonus(GRAY), GRAY)
     }
   })
 }
@@ -121,7 +121,7 @@ const addZeroGEffect = (engine) => {
 
   listen('group:popped', ({ group }) => {
     if (group[0].tag === GRAY) {
-      turnGravityOff(Math.floor(group.length * group.length / 1.5))
+      turnGravityOff(Math.floor(group.length * group.length / 1.3))
     }
   })
 }
