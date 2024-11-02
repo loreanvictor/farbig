@@ -60,6 +60,8 @@ const addChosenSwitch = () => {
       if (count > 3) {
         nextChosenColor()
       }
+    } else {
+      count = 1
     }
   })
 
