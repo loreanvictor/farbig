@@ -2,6 +2,7 @@ import { listen } from '../dispatch.js'
 import { random } from '../random.js'
 import { PURPLE, BOX_CONFIG, changeColor } from '../box/index.js'
 import { isChosen, addScoreOnPop, matchScore } from './common.js'
+import { createIndicator } from './util/indicator.js'
 
 
 export const addPurpleEffect = (engine, config) => {
@@ -11,12 +12,16 @@ export const addPurpleEffect = (engine, config) => {
 
   const REPURPLE_CHANCE = isChosen(PURPLE) ? 85 : 30
   const MAX_PURPLE = 9
-  const purpleInd = document.getElementById('purple')
+  const indicator = createIndicator({
+    element: document.getElementById('purple'),
+    max: MAX_PURPLE
+  })
+
   let turnedPurple = 0
 
   const powerPurple = (mul) => {
     purplePower = Math.min(MAX_PURPLE, purplePower + mul * mul)
-    purpleInd.style.transform = `scaleX(${purplePower / MAX_PURPLE})`
+    indicator.over(100).set(purplePower).take('background').over(0).set(PURPLE).done()
   }
 
   const consumePurple = (group, boxes) => {
@@ -38,8 +43,11 @@ export const addPurpleEffect = (engine, config) => {
       }
     })
 
+    indicator
+      .take('background').over(100).set(targetColor)
+      .take('value').over(purplePower * 100).set(0)
+
     purplePower = 0
-    purpleInd.style.transform = 'scaleX(0)'
   }
 
   listen('box:created', ({ box }) => {

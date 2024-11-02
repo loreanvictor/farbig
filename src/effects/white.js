@@ -4,6 +4,7 @@ import { BOX_CONFIG, WHITE, RED, BLUE, GREEN, PURPLE, GRAY, ORANGE, changeColor 
 import { addScore } from '../score.js'
 import { isChosen, addScoreOnPop, matchScore, nextChosenColor } from './common.js'
 import { createTimer } from './util/timer.js'
+import { createIndicator } from './util/indicator.js'
 
 
 defineEvents('white:color-changed')
@@ -15,20 +16,16 @@ const addDiscoBonus = () => {
   let bonusBase = 0
 
   const timer = createTimer(250)
-
-  const discoInd = document.getElementById('white')
-  const updateIndicator = () => discoInd.style.transform = `scaleX(${timer.get() / DISCO_TIME})`
+  const indicator = createIndicator({ element: document.getElementById('white'), max: DISCO_TIME })
 
   listen('white:color-changed', ({ group }) => {
-    discoInd.style.background = WHITE
+    indicator.take('background').set(WHITE).done()
     timer.set(DISCO_TIME)
     bonusBase = group.length
-
-    updateIndicator()
   })
 
   timer.listen(({ time }) => {
-    updateIndicator()
+    indicator.set(timer.get())
     if (time === 0) {
       const score = bonusBase * bonusBase * colors.length * colors.length * colors.length
       colors = []
@@ -36,24 +33,15 @@ const addDiscoBonus = () => {
     }
   })
 
-  const reset = createTimer()
   listen('box:popped', ({ box }) => {
     if (timer.get() > 0) {
-      discoInd.style.transition = 'none'
-      discoInd.style.background = box.tag
-
-      reset.set(200)
-
       if (!colors.includes(box.tag)) {
-        colors.push(box.tag) 
+        colors.push(box.tag)
       }
-    }
-  })
 
-  reset.listen(({ time }) => {
-    if (time === 0) {
-      discoInd.style.transition = 'background .7s'
-      discoInd.style.background = WHITE
+      indicator.take('background').burst(box.tag).wait(100).then(() => {
+        indicator.over(500).set(WHITE)
+      })
     }
   })
 }

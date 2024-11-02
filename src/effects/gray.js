@@ -2,6 +2,7 @@ import { listen, dispatch, defineEvents } from '../dispatch.js'
 import { addScore } from '../score.js'
 import { GRAY } from '../box/index.js'
 import { createTimer } from './util/timer.js'
+import { createIndicator } from './util/indicator.js'
 import { addScoreOnPop, matchScore, chosenBonus } from './common.js'
 
 
@@ -88,8 +89,11 @@ const addZeroGEffect = (engine) => {
   const NO_GRAV_STEPS = 300
   const MAX_NO_GRAV_TIME = 12 * NO_GRAV_STEPS * chosenBonus(GRAY)
 
-  const indicator = document.getElementById('antigrav')
   const timer = createTimer(NO_GRAV_STEPS)
+  const indicator = createIndicator({
+    element: document.getElementById('antigrav'),
+    max: MAX_NO_GRAV_TIME
+  })
   
   const turnGravityOff = (mul = 1) => {
     timer.set(Math.min(MAX_NO_GRAV_TIME, timer.get() + mul * NO_GRAV_STEPS * chosenBonus(GRAY)))
@@ -104,7 +108,7 @@ const addZeroGEffect = (engine) => {
   }
 
   timer.listen(({ time }) => {
-    indicator.style.transform = `scaleX(${time / (MAX_NO_GRAV_TIME)})`
+    indicator.set(time)
 
     if (time === 0) {
       engine.gravity.scale = DEFAULT_GRAVITY
