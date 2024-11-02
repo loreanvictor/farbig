@@ -121,7 +121,7 @@ const addZeroGEffect = (engine) => {
 
   listen('group:popped', ({ group }) => {
     if (group[0].tag === GRAY) {
-      turnGravityOff(Math.floor(group.length * group.length / 2))
+      turnGravityOff(Math.floor(group.length * group.length / 1.5))
     }
   })
 }
