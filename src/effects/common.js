@@ -5,7 +5,7 @@ import { addScore } from '../score.js'
 
 defineEvents('chosen-color:changed')
 
-let chosenOffset = 0
+let chosenOffset = -1
 const choose = () => COLORS[
   (
     (Math.floor(new Date().getTime() / (1000 * 60 * 60))) + chosenOffset

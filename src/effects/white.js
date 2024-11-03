@@ -29,7 +29,8 @@ const addDiscoBonus = () => {
     if (time === 0) {
       const count = Object.keys(colorMap).length
       const bonus = Object.values(colorMap).reduce((total, each) => total + each * each, 0)
-      const score = Math.floor(bonusBase * bonus * bonus * count / 4)
+      const score = Math.floor(bonusBase * bonus * count * count * count)
+
       colorMap = {}
       addScore(score, WHITE)
     }
