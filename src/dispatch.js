@@ -56,3 +56,21 @@ export const listen = (name, callback) => {
 
   return () => document.removeEventListener(name, listener)
 }
+
+/**
+ * 
+ * retreive a value constantly from a global event.
+ * 
+ * @param {string} name 
+ * @param {(details: object) => any} selector 
+ * @param {any} initial 
+ * @returns {{() => void, get: () => any}}
+ */
+export const observe = (name, selector, initial = 0) => {
+  let last = initial
+
+  const cleanup = listen(name, details => last = selector(details))
+  cleanup.get = () => last
+
+  return cleanup
+}

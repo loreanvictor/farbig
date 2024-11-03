@@ -1,4 +1,4 @@
-import { listen, dispatch, defineEvents } from '../dispatch.js'
+import { listen, dispatch, observe, defineEvents } from '../dispatch.js'
 import { addScore } from '../score.js'
 import { GRAY } from '../box/index.js'
 import { createTimer } from './util/timer.js'
@@ -10,6 +10,7 @@ defineEvents(
   'gravity:turned-on',
   'gravity:turned-off',
   'gravity:off-tick',
+  'vaccum:combo-changed',
 )
 
 export const GRAY_SCORE = 10
@@ -18,6 +19,7 @@ const isGravityOff = engine => engine.gravity.scale === 0
 
 const addZeroGAttractEffect = engine => {
   let attractColor = undefined
+  const vaccumCombo = observe('vaccum:combo-changed', ({ combo }) => combo / 500_000 + 1, 1)
 
   listen('box:touched', box => {
     if (isGravityOff(engine)) {
@@ -33,7 +35,7 @@ const addZeroGAttractEffect = engine => {
           const f = Matter.Vector.mult(
             Matter.Vector.normalise(
               Matter.Vector.sub(pos, box.position)
-            ), 0.2
+            ), 0.2 * vaccumCombo.get()
           )
   
           Matter.Body.applyForce(box, pos, f)
@@ -51,8 +53,9 @@ const addZeroGBonus = () => {
   let vaccumCombo = 0
   let lastRun = 0
   let gravOff = false
-  let gravOffTime = 0
   let colors = []
+
+  const gravOffTime = observe('gravity:off-tick', ({ time }) => time)
 
   listen('gravity:turned-off', () => {
     lastRun = 0
@@ -60,11 +63,9 @@ const addZeroGBonus = () => {
     gravOff = true
   })
 
-  listen('gravity:off-tick', ({ time }) => gravOffTime = time)
-
   listen('score:added', ({ added, color }) => {
     if (gravOff && color !== GRAY) {
-      const timecoeff = Math.min(1, 1 / (1 + Math.exp(-10 * (gravOffTime / minGravTime - 0.75))))
+      const timecoeff = Math.min(1, 1 / (1 + Math.exp(-10 * (gravOffTime.get() / minGravTime - 0.75))))
       lastRun += added * timecoeff
       if (!colors.includes(color)) {
         colors.push(color)
@@ -75,6 +76,7 @@ const addZeroGBonus = () => {
   listen('gravity:turned-on', () => {
     gravOff = false
     vaccumCombo = Math.sqrt(vaccumCombo * vaccumCombo + lastRun * lastRun * colors.length)
+    dispatch('vaccum:combo-changed', { combo: vaccumCombo })
   })
 
   listen('group:popped', ({ group }) => {
@@ -85,9 +87,11 @@ const addZeroGBonus = () => {
 }
 
 const addZeroGEffect = (engine) => {
+  const vaccumCombo = observe('vaccum:combo-changed', ({ combo }) => combo / 200_000 + 1, 1)
+
   const DEFAULT_GRAVITY = engine.gravity.scale
   const NO_GRAV_STEPS = 300
-  const MAX_NO_GRAV_TIME = 12 * NO_GRAV_STEPS * chosenBonus(GRAY)
+  const MAX_NO_GRAV_TIME = 12 * NO_GRAV_STEPS * chosenBonus(GRAY) * vaccumCombo.get()
 
   const timer = createTimer(NO_GRAV_STEPS)
   const indicator = createIndicator({
@@ -96,10 +100,11 @@ const addZeroGEffect = (engine) => {
   })
   
   const turnGravityOff = (mul = 1) => {
-    timer.set(Math.min(MAX_NO_GRAV_TIME, timer.get() + mul * NO_GRAV_STEPS * chosenBonus(GRAY)))
+    timer.set(Math.min(MAX_NO_GRAV_TIME, timer.get() + mul * NO_GRAV_STEPS * chosenBonus(GRAY)) * vaccumCombo.get())
     const extended = isGravityOff(engine)
 
     engine.gravity.scale = 0
+    console.log(vaccumCombo.get())
 
     dispatch('gravity:turned-off', {
       time: timer.get(),
