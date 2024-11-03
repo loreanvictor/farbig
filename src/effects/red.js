@@ -16,12 +16,14 @@ const addRedTimerEffect = () => {
   const timer = createTimer()
   const indicator = createIndicator({ element: document.getElementById('red') })
 
-  const activateRed = (mul) => {
-    redCombo = Math.min(redCombo + Math.floor(Math.max(mul * mul, 8) * chosenBonus(RED) * chosenBonus(RED)), MAX_RED)
+  const activateRed = (count) => {
+    redCombo = Math.min(redCombo
+      + Math.floor(Math.max(count * count * count, 8) * chosenBonus(RED) * chosenBonus(RED)
+    ), MAX_RED)
     indicator.burst(1).then(() => indicator.over(RED_DURATION).set(0))
 
     const scoreCoeff = (Math.floor((timer.get() / RED_DURATION) * RED_SCORE_STEPS) + 1) / RED_SCORE_STEPS
-    addScore(Math.max(2, Math.floor(redCombo * scoreCoeff * 2)), RED)
+    addScore(Math.max(2, count * Math.floor(redCombo * scoreCoeff * 2)), RED)
     timer.set(RED_DURATION)
   }
 
@@ -29,7 +31,7 @@ const addRedTimerEffect = () => {
 
   listen('group:popped', ({ group }) => {
     if (group[0].tag === RED) {
-      activateRed(group.length * group.length)
+      activateRed(group.length)
     }
   })
 }
