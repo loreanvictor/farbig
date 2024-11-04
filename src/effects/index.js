@@ -1,9 +1,9 @@
-import { addGrayEffect } from './gray.js'
+import { addGrayEffect } from './gray/index.js'
+import { addBlueEffect } from './blue/index.js'
+import { addWhiteEffect } from './white/index.js'
 import { addRedEffect } from './red.js'
 import { addPurpleEffect } from './purple.js'
-import { addBlueEffect } from './blue.js'
 import { addOrangeEffect } from './orange.js'
-import { addWhiteEffect } from './white.js'
 import { addGreenEffect } from './green.js'
 
 

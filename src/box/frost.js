@@ -1,5 +1,5 @@
 import { defineEvents, dispatch } from '../dispatch.js'
-import { BLUE, ORANGE, GRAY, changeColor } from './colors.js'
+import { BLUE } from './colors.js'
 
 
 defineEvents(
@@ -8,7 +8,7 @@ defineEvents(
 )
 
 export function freeze(box, time) {
-  if (time < 100) {
+  if (time < 200) {
     return
   }
 
@@ -43,7 +43,7 @@ export function isFrozen(box) {
 }
 
 export function unfreeze(box) {
-  if (isFrozen(box)) {
+  if (isFrozen(box) || box.isStatic) {
     dispatch('box:unfreezed', { box })
   }
 
@@ -51,8 +51,4 @@ export function unfreeze(box) {
   box.plugin.frost = 0
   box.render.strokeStyle = box.render.fillStyle
   box.render.lineWidth = 0
-
-  if (box.tag === ORANGE) {
-    changeColor(box, GRAY)
-  }
 }

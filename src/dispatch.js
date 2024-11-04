@@ -32,7 +32,7 @@ export const dispatch = (name, details) => {
   }
 
   const event = new CustomEvent(name, { detail: details, bubbles: true })
-  document.dispatchEvent(event)
+  setTimeout(() => document.dispatchEvent(event), 0)
 }
 
 

@@ -1,0 +1,1 @@
+export const GRAY_SCORE = 10
