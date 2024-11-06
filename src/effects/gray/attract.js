@@ -5,7 +5,7 @@ import { isGravityOff } from './zero-g.js'
 
 export const addZeroGAttractEffect = engine => {
   let attractColor = undefined
-  const vaccumCombo = observe('vaccum:combo-changed', ({ combo }) => Math.min(combo / 500_000 + 1, 2), 1)
+  const vaccumCombo = observe('vaccum:combo-changed', ({ combo }) => Math.min(combo / 500_000 + 1, 1.5), 1)
 
   listen('box:touched', box => {
     if (isGravityOff(engine)) {
