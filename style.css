@@ -91,7 +91,8 @@ button {
   top: 0;
   height: var(--game-height);
   width: var(--width);
-  right: calc(-1 * var(--width));
+  right: calc(-1 * var(--width) / 2);
+  z-index: 4;
 
   .box-count-marker {
     position: relative;
@@ -104,9 +105,9 @@ button {
 
   #box-count-indicator {
     position: absolute;
-    top: 0;
+    top: 8px;
     margin-left: calc((var(--width) - var(--effects-bar-thickness)) / 2);
-    height: var(--game-height);
+    height: calc(var(--game-height) - 16px);
     background-color: var(--btn-bg);
     width: var(--effects-bar-thickness);
     border-radius: var(--effects-bar-thickness);

@@ -13,7 +13,6 @@ export const addColorChangeEffect = (engine) => {
       const boxes = Matter.Composite.allBodies(engine.world).filter(b => b.kind === 'box')
       const all = [RED, BLUE, GREEN, PURPLE, GRAY, ORANGE]
       const mult =  isChosen(WHITE) ? 2 : 1
-      const gmult = Math.max(Math.floor(Math.log(group.length * 1.7) / Math.log(2)), 1)
 
       const toBeChanged = []
       boxes.forEach(box => {
@@ -24,7 +23,7 @@ export const addColorChangeEffect = (engine) => {
         if (
           box.tag !== WHITE &&
           !box.isStatic &&
-          distance < BOX_CONFIG.SIZE * gmult * 1.5 * mult
+          distance < BOX_CONFIG.SIZE * 1.5 * mult
         ) {
           toBeChanged.push(box)
         }
