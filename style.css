@@ -10,6 +10,7 @@
   --body-bg: #32383a;
   --btn-bg: #586757aa;
   --board-bg: #102f47;
+  --indicator-bg: #3a4b59;
 
   --game-width: 380px;
   --game-height: 580px;
@@ -108,7 +109,7 @@ button {
     top: 8px;
     margin-left: calc((var(--width) - var(--effects-bar-thickness)) / 2);
     height: calc(var(--game-height) - 16px);
-    background-color: var(--btn-bg);
+    background-color: var(--indicator-bg);
     width: var(--effects-bar-thickness);
     border-radius: var(--effects-bar-thickness);
     transform-origin: bottom;
@@ -141,7 +142,7 @@ button {
   align-items: center;
   justify-content: center;
   font-size: 1.5rem;
-  z-index: 2;
+  z-index: 4;
 
   &>div {
     max-width: var(--game-width);
