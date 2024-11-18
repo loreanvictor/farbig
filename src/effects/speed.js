@@ -3,8 +3,18 @@ import { addScore } from '../score.js'
 
 
 export const addSpeedBonus = () => {
+  const HIGH_ROTATE_BONUS = 420_000
+  const MIN_ANG_SPEED = 0.7
+
+  listen('box:popped', ({ box }) => {
+    if (box.angularSpeed > MIN_ANG_SPEED) {
+      addScore(HIGH_ROTATE_BONUS * Math.floor(box.angularSpeed / MIN_ANG_SPEED), box.tag)
+    }
+  })
+
+  const MIN_SPEED = 1
+
   listen('group:popped', ({ group }) => {
-    const MIN_SPEED = 1
     const accumulative = Math.sqrt(
       group.reduce(
         (total, box) => 
@@ -12,6 +22,6 @@ export const addSpeedBonus = () => {
       , 0)
     )
 
-    addScore(Math.floor(accumulative * group.length * 1000, group[0].tag))
+    addScore(Math.floor(accumulative * group.length * 100, group[0].tag))
   })
 }
