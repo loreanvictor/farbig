@@ -35,13 +35,13 @@ export const addZeroGBonus = () => {
 
   listen('gravity:turned-on', () => {
     gravOff = false
-    vaccumCombo = Math.sqrt(vaccumCombo * vaccumCombo + lastRun * lastRun * colors.length)
+    vaccumCombo = Math.sqrt(vaccumCombo * vaccumCombo + lastRun * lastRun * colors.length * colors.length)
     dispatch('vaccum:combo-changed', { combo: vaccumCombo })
   })
 
   listen('group:popped', ({ group }) => {
     if (group[0].tag === GRAY) {
-      addScore(Math.floor(group.length * vaccumCombo / 96) * chosenBonus(GRAY), GRAY)
+      addScore(Math.floor(group.length * vaccumCombo / 72) * chosenBonus(GRAY), GRAY)
     }
   })
 }

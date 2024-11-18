@@ -5,6 +5,7 @@ import { addRedEffect } from './red.js'
 import { addPurpleEffect } from './purple.js'
 import { addOrangeEffect } from './orange.js'
 import { addGreenEffect } from './green.js'
+import { addSpeedBonus } from './speed.js'
 
 
 export const addColorEffects = (engine, config) => {
@@ -15,4 +16,6 @@ export const addColorEffects = (engine, config) => {
   addOrangeEffect(engine, config)
   addWhiteEffect(engine, config)
   addGreenEffect(engine, config)
+
+  addSpeedBonus()
 }
