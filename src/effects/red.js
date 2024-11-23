@@ -18,7 +18,9 @@ const addRedTimerEffect = () => {
 
   const activateRed = (count) => {
     redCombo = Math.min(redCombo
-      + Math.floor(Math.max(count * count * count, 8) * chosenBonus(RED) * chosenBonus(RED)
+      + Math.floor(
+        Math.max(count * count * count, 8)
+          * chosenBonus(RED) * chosenBonus(RED) * chosenBonus(RED) * chosenBonus(RED) 
     ), MAX_RED)
     indicator.burst(1).then(() => indicator.over(RED_DURATION).set(0))
 
