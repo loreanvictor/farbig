@@ -6,7 +6,7 @@ const EXPLOSION_FORCE = {
   [RED]: 50,
   [GRAY]: -20,
   [ORANGE]: 5,
-  [BLUE]: 20,
+  [BLUE]: -10,
   [PURPLE]: 5,
   [WHITE]: 5,
   [GREEN]: 20
