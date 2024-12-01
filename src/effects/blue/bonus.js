@@ -10,7 +10,7 @@ export const addFrozenBonus = () => {
     const frozen = group.filter(b => isFrozen(b)).length
 
     if (frozen > 0) {
-      addScore(Math.floor(frozen * frozen * frozen / 2.3 * chosenBonus(BLUE)), BLUE)
+      addScore(Math.floor(frozen * frozen * frozen / 2.3 * chosenBonus(BLUE) * chosenBonus(BLUE)), BLUE)
     }
   })
 }

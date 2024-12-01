@@ -7,7 +7,7 @@ import { freezables } from './common.js'
 
 
 export const addFreezeSpread = (engine) => {
-  const FROST_SPREAD_FALLOFF = isChosen(BLUE) ? .95 : .45
+  const FROST_SPREAD_FALLOFF = isChosen(BLUE) ? .95 : .3
 
   listen('box:freezed', ({ box, refreeze }) => {
     if (!refreeze) {
