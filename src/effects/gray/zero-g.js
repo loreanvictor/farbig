@@ -15,7 +15,7 @@ defineEvents(
 export const isGravityOff = (engine) => engine.gravity.scale === 0
 
 export const addZeroGEffect = (engine) => {
-  const vaccumCombo = observe('vaccum:combo-changed', ({ combo }) => Math.min(combo / 500_000 + 1, 2), 1)
+  const vaccumCombo = observe('vaccum:combo-changed', ({ combo }) => Math.min(combo / 1_000_000 + 1, 2), 1)
 
   const DEFAULT_GRAVITY = engine.gravity.scale
   const NO_GRAV_STEPS = 300
