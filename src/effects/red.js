@@ -3,15 +3,15 @@ import { listen } from '../dispatch.js'
 import { RED } from '../box/index.js'
 import { createTimer } from './util/timer.js'
 import { createIndicator } from './util/indicator.js'
-import { addScoreOnPop, matchScore, chosenBonus } from './common.js'
+import { addScoreOnPop, matchScore, chosenBonus, isChosen } from './common.js'
 
 
 const addRedTimerEffect = () => {
   let redCombo = 0
 
-  const MAX_RED = 8192
+  const MAX_RED = 8192 * chosenBonus(RED)
   const RED_DURATION = 3500
-  const RED_SCORE_STEPS = 7
+  const RED_SCORE_STEPS = isChosen(RED) ? 10 : 7
 
   const timer = createTimer()
   const indicator = createIndicator({ element: document.getElementById('red') })
