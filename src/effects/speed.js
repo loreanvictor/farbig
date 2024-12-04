@@ -14,7 +14,7 @@ export const addSpeedBonus = () => {
     }
   })
 
-  const MIN_SPEED = 1
+  const MIN_SPEED = 3
 
   listen('group:popped', ({ group }) => {
     const accumulative = Math.sqrt(
