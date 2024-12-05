@@ -13,17 +13,4 @@ export const addSpeedBonus = () => {
       addScore(HIGH_ROTATE_BONUS * factor * factor, box.tag)
     }
   })
-
-  const MIN_SPEED = 3
-
-  listen('group:popped', ({ group }) => {
-    const accumulative = Math.sqrt(
-      group.reduce(
-        (total, box) => 
-          box.speed > MIN_SPEED ? total + box.speed * box.speed : total
-      , 0)
-    )
-
-    addScore(Math.floor(accumulative * group.length * 100, group[0].tag))
-  })
 }
